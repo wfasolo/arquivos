@@ -45,9 +45,10 @@ intervalo = pd.concat([pd.DataFrame(np.arange(1, 11, 0.5)), pd.DataFrame(
 hora = pd.DataFrame()
 for i in range(22):
     hora[i] = [datetime.utcfromtimestamp(
-        weather_df['dt'][i]).strftime("%d/%m/%Y %H:%M")]
+        weather_df['dt'][i]).strftime("%d/%m/%Y"), datetime.utcfromtimestamp(
+        weather_df['dt'][i]).strftime("%H h")]
 hora = hora.T
-
+print(hora)
 # generate a model of polynomial features
 for i in range(2, 20):
     poly = PolynomialFeatures(degree=i, include_bias=False)
@@ -77,37 +78,36 @@ for i in range(2, 20):
 
     if score_Temp > score_Temp2:
         score_Temp2 = score_Temp
-        pred_Temp2 = pd.DataFrame(pred_Temp).round(2)
+        pred_Temp2 = pd.DataFrame(pred_Temp).round(1)
         i_Temp = i
 
     if score_Pres > score_Pres2:
         score_Pres2 = score_Pres
-        pred_Pres2 = pd.DataFrame(pred_Pres).round(2)
+        pred_Pres2 = pd.DataFrame(pred_Pres).round(1)
         i_Pres = i
 
     if score_Umid > score_Umid2:
         score_Umid2 = score_Umid
-        pred_Umid2 = pd.DataFrame(pred_Umid).round(2)
+        pred_Umid2 = pd.DataFrame(pred_Umid).round(1)
         i_Umid = i
-
 
 
 print(i_Temp, score_Temp2.__round__(4))
 print(i_Pres, score_Pres2.__round__(4))
 print(i_Umid, score_Umid2.__round__(4))
 
-corrigido = pd.DataFrame([hora[0].values, pred_Pres2[0][-22:], pred_Temp2[0]
+corrigido = pd.DataFrame([hora[1].values, pred_Pres2[0][-22:], pred_Temp2[0]
                           [-22:], pred_Umid2[0][-22:]], index=['hora', 'Pres', 'Temp', 'Umid']).T
 
 print(corrigido)
 
-plt.plot(corrigido['hora'],corrigido['Temp'])
+plt.plot(corrigido['hora'], corrigido['Temp'])
 plt.xticks(rotation=90)
 plt.show()
-plt.plot(corrigido['hora'],corrigido['Pres'])
+plt.plot(corrigido['hora'], corrigido['Pres'])
 plt.xticks(rotation=90)
 plt.show()
-plt.plot(corrigido['hora'],corrigido['Umid'])
+plt.plot(corrigido['hora'], corrigido['Umid'])
 plt.xticks(rotation=90)
 plt.show()
 
@@ -115,7 +115,15 @@ trace = go.Scatter(x=corrigido['hora'],
                    y=corrigido['Temp'],
                    text=corrigido['Temp'],
                    textposition='top center',
-                   mode='lines+markers+text')
+                   mode='lines+markers+text',
+                   showlegend=False)
 
-data = [trace]
+trace2 = go.Bar(x=corrigido['hora'],
+                y=corrigido['Temp'],
+                marker_color='LightBlue',
+                opacity=0.5,
+                showlegend=False
+                )
+
+data = [trace, trace2]
 py.plot(data)
