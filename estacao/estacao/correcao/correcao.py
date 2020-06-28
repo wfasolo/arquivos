@@ -128,6 +128,3 @@ trace2 = go.Bar(x=corrigido['hora'],
 
 data_temp = [trace, trace2]
 py.plot(data_temp)
-
-
-aa
