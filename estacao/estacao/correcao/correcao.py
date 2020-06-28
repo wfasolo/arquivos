@@ -37,18 +37,18 @@ station_df = pd.DataFrame(station_df)
 station = station_df.drop(['Chuv'], axis=1)
 station = station.round(2)
 inv_station = station[::-1]
-dados = pd.concat([inv_station[-20:], weather_df[:22]], ignore_index=True)
+dados = pd.concat([inv_station[-20:], weather_df[:24]], ignore_index=True)
 intervalo = pd.concat([pd.DataFrame(np.arange(1, 11, 0.5)), pd.DataFrame(
-    np.arange(11, 33, 1))], ignore_index=True)
+    np.arange(11, 35, 1))], ignore_index=True)
 
 # hora
 hora = pd.DataFrame()
-for i in range(22):
+for i in range(24):
     hora[i] = [datetime.utcfromtimestamp(
         weather_df['dt'][i]).strftime("%d/%m/%Y"), datetime.utcfromtimestamp(
         weather_df['dt'][i]).strftime("%H h")]
 hora = hora.T
-print(hora)
+
 # generate a model of polynomial features
 for i in range(2, 20):
     poly = PolynomialFeatures(degree=i, include_bias=False)
@@ -96,8 +96,8 @@ print(i_Temp, score_Temp2.__round__(4))
 print(i_Pres, score_Pres2.__round__(4))
 print(i_Umid, score_Umid2.__round__(4))
 
-corrigido = pd.DataFrame([hora[1].values, pred_Pres2[0][-22:], pred_Temp2[0]
-                          [-22:], pred_Umid2[0][-22:]], index=['hora', 'Pres', 'Temp', 'Umid']).T
+corrigido = pd.DataFrame([hora[1].values, pred_Pres2[0][-24:], pred_Temp2[0]
+                          [-24:], pred_Umid2[0][-24:]], index=['hora', 'Pres', 'Temp', 'Umid']).T
 
 print(corrigido)
 
@@ -110,6 +110,7 @@ plt.show()
 plt.plot(corrigido['hora'], corrigido['Umid'])
 plt.xticks(rotation=90)
 plt.show()
+
 
 trace = go.Scatter(x=corrigido['hora'],
                    y=corrigido['Temp'],
@@ -125,5 +126,5 @@ trace2 = go.Bar(x=corrigido['hora'],
                 showlegend=False
                 )
 
-data = [trace, trace2]
-py.plot(data)
+data_temp = [trace, trace2]
+py.plot(data_temp)
