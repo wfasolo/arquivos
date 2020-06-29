@@ -24,6 +24,7 @@ weather_pd = pd.DataFrame(weather_json['forecasts'])
 weather_df = pd.DataFrame([(weather_pd.fcst_valid-10800), weather_pd.mslp, weather_pd.hi,
                            weather_pd.rh], index=['dt', 'Pres', 'Temp', 'Umid']).T
 weather_df.reset_index(inplace=True, drop=True)
+weather_df.dropna()
 
 # Dados estação
 resp = requests.get(url_station)
@@ -32,22 +33,24 @@ station_pd = pd.DataFrame(station_json)
 station = station_pd['val'].values
 station_df = pd.io.json.json_normalize(station)
 station_df = pd.DataFrame(station_df)
+station_df = station_df.dropna()
+
+# hora
+hora = pd.DataFrame()
+for i in range(24):
+    hora[i] = [datetime.utcfromtimestamp(weather_df['dt'][i]).strftime(
+        "%d/%m/%Y"), datetime.utcfromtimestamp(weather_df['dt'][i]).strftime("%H h")]
+hora = hora.T
 
 # Concatenar
 station = station_df.drop(['Chuv'], axis=1)
 station = station.round(2)
 inv_station = station[::-1]
+weather_df = weather_df.drop(['dt'], axis=1)
 dados = pd.concat([inv_station[-20:], weather_df[:24]], ignore_index=True)
 intervalo = pd.concat([pd.DataFrame(np.arange(1, 11, 0.5)), pd.DataFrame(
     np.arange(11, 35, 1))], ignore_index=True)
 
-# hora
-hora = pd.DataFrame()
-for i in range(24):
-    hora[i] = [datetime.utcfromtimestamp(
-        weather_df['dt'][i]).strftime("%d/%m/%Y"), datetime.utcfromtimestamp(
-        weather_df['dt'][i]).strftime("%H h")]
-hora = hora.T
 
 # generate a model of polynomial features
 for i in range(2, 20):
@@ -128,3 +131,5 @@ trace2 = go.Bar(x=corrigido['hora'],
 
 data_temp = [trace, trace2]
 py.plot(data_temp)
+
+station_df.to_csv('mu.csv')

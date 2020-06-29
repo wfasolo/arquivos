@@ -8,10 +8,10 @@ def dados():
     mu_csv = pd.read_csv('mu.csv', sep=',')
 
     chuva = pd.DataFrame([mu_csv['Temp'], mu_csv['Pres'],
-                          mu_csv['Umid'],  mu_csv['Chuva']], index=['Temp', 'Press', 'Umid', 'Chuv']).T
+                          mu_csv['Umid'],  mu_csv['Chuv']], index=['Temp', 'Press', 'Umid', 'Chuv']).T
 
     chuva = chuva.dropna()
-   
+       
     X = chuva.drop(['Chuv'], axis=1)
     y = chuva['Chuv']
     
@@ -19,7 +19,7 @@ def dados():
     atual=atual[-1:]
     
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.30)
+        X, y, test_size=0.20)
 
     scaler = StandardScaler()
     scaler.fit(X_train)
