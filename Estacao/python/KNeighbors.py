@@ -3,7 +3,7 @@ from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
 
 
-def valor(X_train, X_test, y_train, y_test, atual):
+def valor(X_train, X_test, y_train, y_test, previsao):
     
 
     
@@ -17,7 +17,7 @@ def valor(X_train, X_test, y_train, y_test, atual):
 
     acur = metrics.accuracy_score(y_test, y_pred)
 
-    print('KN: ', model.predict_proba(atual))
+    print('KN: ', model.predict_proba(previsao))
 
 
     return acur

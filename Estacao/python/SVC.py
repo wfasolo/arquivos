@@ -3,7 +3,7 @@ from sklearn import metrics
 from sklearn.svm import SVC
 
 
-def valor(X_train, X_test, y_train, y_test, atual):
+def valor(X_train, X_test, y_train, y_test, previsao):
   
 
     
@@ -18,6 +18,6 @@ def valor(X_train, X_test, y_train, y_test, atual):
     acur = metrics.accuracy_score(y_test, y_pred)
 
      
-    print('SVC: ', model.predict_proba(atual))
+    print('SVC: ', model.predict_proba(previsao))
     
     return acur

@@ -3,7 +3,7 @@ from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
 
 
-def valor(X_train, X_test, y_train, y_test, atual):
+def valor(X_train, X_test, y_train, y_test, previsao):
     
     
     # Tainar modelo
@@ -15,6 +15,6 @@ def valor(X_train, X_test, y_train, y_test, atual):
 
     acur = metrics.accuracy_score(y_test, y_pred)
 
-    print('FLOR: ', model.predict_proba(atual))
+    print('FLOR: ', model.predict_proba(previsao))
 
     return acur
