@@ -3,9 +3,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import correcao
 
-def dados():
+def dados(corrigir,chuva):
 
-    corrigir = correcao.corrigir()
+   
     chuva=corrigir['estacao']
     previsaoh=corrigir['corrigido']
     previsao = previsaoh.drop(['hora'], axis=1)

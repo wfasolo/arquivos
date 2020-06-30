@@ -7,13 +7,10 @@ import plotly.graph_objs as go
 import leitura
 
 
-def corrigir():
-
-    ler = leitura.ler()
-    dados = ler['dados']
-    intervalo = ler['intervalo']
-    hora = ler['hora']
-    estacao = ler['estacao']
+def corrigir(ler):
+    dados=ler['dados']
+    intervalo=ler['intervalo']
+    hora=ler['hora']
 
     score_Temp2 = 0
     score_Pres2 = 0
@@ -103,4 +100,4 @@ def corrigir():
     # station_df.to_json('estacao.json',orient='records') # ou 'table'
     # corrigido.to_json('corrigido.json',orient='records')
 
-    return {'corrigido': corrigido, 'estacao': estacao}
+    return {'corrigido': corrigido}
