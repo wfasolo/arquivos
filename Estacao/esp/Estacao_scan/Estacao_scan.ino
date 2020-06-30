@@ -1,22 +1,24 @@
 #include <Time.h>
 #include <ThingerESP8266.h>
-#include <NTPClient.h>
-#include <WiFiUdp.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
+
+#include <ESP8266WiFi.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 #define USERNAME "wfasolo"
 #define DEVICE_ID "Estacao"
 #define DEVICE_CREDENTIAL "@#lucas"
 
-#define SSID "FASOLO"
-#define SSID_PASSWORD "@@lucas@@"
-
 WiFiUDP udp; //Cria um objeto "UDP"
 NTPClient ntp(udp, "a.st1.ntp.br", -3 * 3600, 60000);
 Adafruit_BME280 bme;
 
-float cont = 50000,
+float cont = -55000,
       cont2 = 0,
       pres = 0,
       temp = 0,
@@ -28,10 +30,15 @@ ThingerESP8266 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
 
 void setup()
 {
+  WiFiManager wifiManager;
+  //wifiManager.resetSettings();
+  wifiManager.setConfigPortalTimeout(120);
+  wifiManager.setTimeout(120);
+  wifiManager.autoConnect("TEST");
+
   pinMode(pinoSensor, INPUT);
   ntp.begin();
   bme.begin(0x76);
-  thing.add_wifi(SSID, SSID_PASSWORD);
 
   // resource output example (i.e. reading a sensor value)
   thing["parametros"] >> [](pson &out) {
@@ -51,19 +58,14 @@ void loop()
     if (WiFi.status() != WL_CONNECTED)
     {
       WiFi.reconnect();
-      delay(1000);
-      yield();
+      cont = millis() - 58500;
     }
     else
     {
-
       // Atualizacao da hora
       ntp.forceUpdate();
-
-      String hora = ntp.getFormattedTime();
-      String a = String(hora[3]);
-      String b = String(hora[4]);
-      String minu = a + b;
+      int hora = ntp.getHours();
+      int minuto = ntp.getMinutes();
       //
 
       // chuva
@@ -97,7 +99,7 @@ void loop()
       //
 
       // gravacao no banco de dados a cada 15 minutos
-      if (minu.toInt() == 00 || minu.toInt() == 15 || minu.toInt() == 30 || minu.toInt() == 45)
+      if (minuto == 00 || minuto == 15 || minuto == 30 || minuto == 45)
       {
         thing.write_bucket("dados_estacao1", "parametros");
       }
@@ -109,12 +111,21 @@ void loop()
 
       cont = millis();
       yield();
-    }
 
-    if (millis() - cont2 >= 15000)
-    {
-      thing.handle();
-      cont2 = millis();
+      if (millis() - cont2 >= 15000)
+      {
+        thing.handle();
+        cont2 = millis();
+      }
+
+      // reiniciar o esp
+      if (hora == 13 && minuto == 02)
+      {
+        delay(30000);
+        yield();
+        ESP.restart();
+      }
+      //
     }
   }
 }

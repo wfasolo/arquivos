@@ -1,12 +1,8 @@
-import pandas as pd
 from sklearn import metrics
 from sklearn.svm import SVC
 
 
-def valor(X_train, X_test, y_train, y_test, previsao):
-  
-
-    
+def valor(X_train, X_test, y_train, y_test, prev_trans):
 
     # Tainar modelo
     model = SVC(kernel='rbf', gamma=1, probability=True)
@@ -17,7 +13,6 @@ def valor(X_train, X_test, y_train, y_test, previsao):
 
     acur = metrics.accuracy_score(y_test, y_pred)
 
-     
-    print('SVC: ', model.predict_proba(previsao))
-    
-    return acur
+    previsao = model.predict_proba(prev_trans)
+
+    return {'acuracia': acur, 'previsao': previsao}

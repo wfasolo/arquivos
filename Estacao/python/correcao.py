@@ -1,16 +1,12 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
-import plotly.offline as py
-import plotly.graph_objs as go
-import leitura
 
 
 def corrigir(ler):
-    dados=ler['dados']
-    intervalo=ler['intervalo']
-    hora=ler['hora']
+    dados = ler['dados']
+    intervalo = ler['intervalo']
+    hora = ler['hora']
 
     score_Temp2 = 0
     score_Pres2 = 0
@@ -64,40 +60,5 @@ def corrigir(ler):
 
     corrigido = pd.DataFrame([hora[1].values, pred_Pres2[0][-24:], pred_Temp2[0]
                               [-24:], pred_Umid2[0][-24:]], index=['hora', 'Pres', 'Temp', 'Umid']).T
-
-    print(corrigido)
-
-    plt.plot(corrigido['hora'], corrigido['Temp'])
-    plt.xticks(rotation=90)
-    plt.show()
-    plt.plot(corrigido['hora'], corrigido['Pres'])
-    plt.xticks(rotation=90)
-    plt.show()
-    plt.plot(corrigido['hora'], corrigido['Umid'])
-    plt.xticks(rotation=90)
-    plt.show()
-
-    trace = go.Scatter(x=corrigido['hora'],
-                       y=corrigido['Temp'],
-                       text=corrigido['Temp'],
-                       textposition='top center',
-                       mode='lines+markers+text',
-                       showlegend=False)
-
-    trace2 = go.Bar(x=corrigido['hora'],
-                    y=corrigido['Temp'],
-                    marker_color='LightBlue',
-                    opacity=0.5,
-                    showlegend=False
-                    )
-
-    data_temp = [trace, trace2]
-    py.plot(data_temp)
-
-    print(corrigido)
-
-    # station_df.to_csv('estacao.csv')
-    # station_df.to_json('estacao.json',orient='records') # ou 'table'
-    # corrigido.to_json('corrigido.json',orient='records')
 
     return {'corrigido': corrigido}

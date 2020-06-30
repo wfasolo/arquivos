@@ -6,30 +6,33 @@ import prepro
 import KNeighbors
 import SVC
 import Florest
+import graficos
 
-ler = leitura.ler()
+leit = leitura.ler()
 
-corrige = correcao.corrigir(ler)
+corrige = correcao.corrigir(leit)
 
-dados = prepro.dados(corrige,ler['estacao'])
+prepara = prepro.dados(corrige, leit['estacao'])
 
-dados_mu = KNeighbors.valor(dados['X_train'],
-                            dados['X_test'],
-                            dados['y_train'],
-                            dados['y_test'],
-                            dados['previsao'])
+dados_KN = KNeighbors.valor(prepara['X_train'],
+                            prepara['X_test'],
+                            prepara['y_train'],
+                            prepara['y_test'],
+                            prepara['prev_trans'])
 
-dados_mu2 = SVC.valor(dados['X_train'],
-                      dados['X_test'],
-                      dados['y_train'],
-                      dados['y_test'],
-                      dados['previsao'])
+dados_SVC = SVC.valor(prepara['X_train'],
+                      prepara['X_test'],
+                      prepara['y_train'],
+                      prepara['y_test'],
+                      prepara['prev_trans'])
 
-dados_mu3 = Florest.valor(dados['X_train'],
-                          dados['X_test'],
-                          dados['y_train'],
-                          dados['y_test'],
-                          dados['previsao'])
+dados_FL = Florest.valor(prepara['X_train'],
+                         prepara['X_test'],
+                         prepara['y_train'],
+                         prepara['y_test'],
+                         prepara['prev_trans'])
+
+graficos.graf(corrige['corrigido'])
 
 
 #print(dados_mu.idxmax(),  dados_mu.max())

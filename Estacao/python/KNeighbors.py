@@ -1,12 +1,8 @@
-import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
 
 
-def valor(X_train, X_test, y_train, y_test, previsao):
-    
-
-    
+def valor(X_train, X_test, y_train, y_test, prev_trans):
 
     # Tainan model
     model = KNeighborsClassifier(n_neighbors=(1))
@@ -17,7 +13,6 @@ def valor(X_train, X_test, y_train, y_test, previsao):
 
     acur = metrics.accuracy_score(y_test, y_pred)
 
-    print('KN: ', model.predict_proba(previsao))
+    previsao=model.predict_proba(prev_trans)
 
-
-    return acur
+    return {'acuracia': acur, 'previsao': previsao}
