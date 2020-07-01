@@ -49,7 +49,7 @@ void setup()
   bme.begin(0x76);
 
   // resource output example (i.e. reading a sensor value)
-  thing["parametros"] >> [](pson & out) {
+  thing["parametros"] >> [](pson &out) {
     out["Chuv"] = chuv;
     out["Pres"] = pres;
     out["Temp"] = temp;
@@ -92,18 +92,17 @@ void loop()
       temp = 0;
       umid = 0;
 
-      for (int i = 0; i <= 124; i++)
+      for (int i = 0; i <= 99; i++)
       {
-
         pres = pres + bme.readPressure();
         temp = temp + bme.readTemperature();
         umid = umid + bme.readHumidity();
-        delay(25);
+        delay(10);
       }
 
-      pres = pres / (12500 * 0.99),
-      temp = temp / 125,
-      umid = umid / (125 * 0.9);
+      pres = pres / (10000 * 0.99),
+      temp = temp / 100,
+      umid = umid / (100 * 0.9);
       //
 
       // gravacao no banco de dados a cada 15 minutos
@@ -127,12 +126,12 @@ void loop()
 
     cont = millis();
     yield();
-
   }
-  
+
   if (millis() - cont2 >= 15000)
   {
     thing.handle();
     cont2 = millis();
+    yield();
   }
 }

@@ -2,7 +2,12 @@ from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
 
 
-def valor(X_train, X_test, y_train, y_test, prev_trans):
+def valor(prepara):
+    X_train = prepara['X_train'],
+    X_test = prepara['X_test'],
+    y_train = prepara['y_train'],
+    y_test = prepara['y_test'],
+    prev_trans = prepara['prev_trans']
 
     # Tainan model
     model = KNeighborsClassifier(n_neighbors=(1))
@@ -13,6 +18,6 @@ def valor(X_train, X_test, y_train, y_test, prev_trans):
 
     acur = metrics.accuracy_score(y_test, y_pred)
 
-    previsao=model.predict_proba(prev_trans)
+    previsao = model.predict_proba(prev_trans)
 
     return {'acuracia': acur, 'previsao': previsao}

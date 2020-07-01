@@ -2,7 +2,12 @@ from sklearn import metrics
 from sklearn.svm import SVC
 
 
-def valor(X_train, X_test, y_train, y_test, prev_trans):
+def valor(prepara):
+    X_train = prepara['X_train'],
+    X_test = prepara['X_test'],
+    y_train = prepara['y_train'],
+    y_test = prepara['y_test'],
+    prev_trans = prepara['prev_trans']
 
     # Tainar modelo
     model = SVC(kernel='rbf', gamma=1, probability=True)
