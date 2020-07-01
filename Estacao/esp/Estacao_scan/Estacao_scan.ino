@@ -10,6 +10,9 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
+#define SSID_ "FASOLO"
+#define SSID_PASSWORD "@@lucas@@"
+
 #define USERNAME "wfasolo"
 #define DEVICE_ID "Estacao"
 #define DEVICE_CREDENTIAL "@#lucas"
@@ -31,17 +34,22 @@ ThingerESP8266 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
 void setup()
 {
   WiFiManager wifiManager;
-  //wifiManager.resetSettings();
-  wifiManager.setConfigPortalTimeout(120);
-  wifiManager.setTimeout(120);
+  wifiManager.resetSettings();
+  //wifiManager.setConfigPortalTimeout(120);
+  wifiManager.setTimeout(60);
   wifiManager.autoConnect("TEST");
+
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    WiFi.begin(SSID_, SSID_PASSWORD);
+  }
 
   pinMode(pinoSensor, INPUT);
   ntp.begin();
   bme.begin(0x76);
 
   // resource output example (i.e. reading a sensor value)
-  thing["parametros"] >> [](pson &out) {
+  thing["parametros"] >> [](pson & out) {
     out["Chuv"] = chuv;
     out["Pres"] = pres;
     out["Temp"] = temp;
@@ -58,7 +66,7 @@ void loop()
     if (WiFi.status() != WL_CONNECTED)
     {
       WiFi.reconnect();
-      cont = millis() - 58500;
+      cont = millis() - 59000;
     }
     else
     {
@@ -104,20 +112,6 @@ void loop()
         thing.write_bucket("dados_estacao1", "parametros");
       }
       //
-
-      // enviar dados
-      thing.stream(thing["parametros"]);
-      //thing.stream(thing["Alt"]);
-
-      cont = millis();
-      yield();
-
-      if (millis() - cont2 >= 15000)
-      {
-        thing.handle();
-        cont2 = millis();
-      }
-
       // reiniciar o esp
       if (hora == 13 && minuto == 02)
       {
@@ -127,5 +121,18 @@ void loop()
       }
       //
     }
+    // enviar dados
+    thing.stream(thing["parametros"]);
+    //thing.stream(thing["Alt"]);
+
+    cont = millis();
+    yield();
+
+  }
+  
+  if (millis() - cont2 >= 15000)
+  {
+    thing.handle();
+    cont2 = millis();
   }
 }
