@@ -19,14 +19,18 @@
 
 WiFiUDP udp; //Cria um objeto "UDP"
 NTPClient ntp(udp, "a.st1.ntp.br", -3 * 3600, 60000);
+
 Adafruit_BME280 bme;
 
-float cont = -55000,
-      cont2 = 0,
-      pres = 0,
+unsigned long cont = -55000,
+              cont2 = 0;
+
+float pres = 0,
       temp = 0,
       umid = 0;
+
 int chuv = 0;
+
 const int pinoSensor = D5;
 
 ThingerESP8266 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
@@ -49,7 +53,7 @@ void setup()
   bme.begin(0x76);
 
   // resource output example (i.e. reading a sensor value)
-  thing["parametros"] >> [](pson &out) {
+  thing["parametros"] >> [](pson & out) {
     out["Chuv"] = chuv;
     out["Pres"] = pres;
     out["Temp"] = temp;

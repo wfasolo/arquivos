@@ -16,11 +16,12 @@ WiFiUDP udp; //Cria um objeto "UDP"
 NTPClient ntp(udp, "a.st1.ntp.br", -3 * 3600, 60000);
 Adafruit_BME280 bme;
 
-float cont = 50000,
-      cont2 = 0,
-      pres = 0,
-      temp = 0,
-      umid = 0;
+unsigned long cont = -55,
+              cont2 = 0;
+
+float     pres = 0,
+          temp = 0,
+          umid = 0;
 int chuv = 0;
 const int pinoSensor = D5;
 
@@ -34,7 +35,7 @@ void setup()
   thing.add_wifi(SSID, SSID_PASSWORD);
 
   // resource output example (i.e. reading a sensor value)
-  thing["parametros"] >> [](pson &out) {
+  thing["parametros"] >> [](pson & out) {
     out["Chuv"] = chuv;
     out["Pres"] = pres;
     out["Temp"] = temp;
@@ -45,25 +46,32 @@ void setup()
 
 void loop()
 {
-  if (millis() - cont >= 60000)
+  if ((millis() / 1000) - cont >= 59.5)
   {
     //verifica a conexao WiFi
     if (WiFi.status() != WL_CONNECTED)
     {
       WiFi.reconnect();
-      delay(1000);
+      cont = (millis() / 1000) - 59;
       yield();
     }
-    else
-    {
 
+    else
+
+    {
       // Atualizacao da hora
       ntp.forceUpdate();
+      int hora = ntp.getHours();
+      int minuto = ntp.getMinutes();
+      //
 
-      String hora = ntp.getFormattedTime();
-      String a = String(hora[3]);
-      String b = String(hora[4]);
-      String minu = a + b;
+      // reiniciar o esp
+      if (hora == 13 && minuto == 02)
+      {
+        delay(30000);
+        yield();
+        ESP.restart();
+      }
       //
 
       // chuva
@@ -82,22 +90,22 @@ void loop()
       temp = 0;
       umid = 0;
 
-      for (int i = 0; i <= 124; i++)
+      for (int i = 0; i <= 99; i++)
       {
 
         pres = pres + bme.readPressure();
         temp = temp + bme.readTemperature();
         umid = umid + bme.readHumidity();
-        delay(25);
+        delay(10);
       }
 
-      pres = pres / (12500 * 0.99),
-      temp = temp / 125,
-      umid = umid / (125 * 0.9);
+      pres = pres / (10000 * 0.99),
+      temp = temp / 100,
+      umid = umid / (100 * 0.9);
       //
 
       // gravacao no banco de dados a cada 15 minutos
-      if (minu.toInt() == 00 || minu.toInt() == 15 || minu.toInt() == 30 || minu.toInt() == 45)
+      if (minuto == 00 || minuto == 15 || minuto == 30 || minuto == 45)
       {
         thing.write_bucket("dados_estacao1", "parametros");
       }
@@ -107,14 +115,15 @@ void loop()
       thing.stream(thing["parametros"]);
       //thing.stream(thing["Alt"]);
 
-      cont = millis();
+      cont = (millis() / 1000);
       yield();
     }
+  }
 
-    if (millis() - cont2 >= 15000)
-    {
-      thing.handle();
-      cont2 = millis();
-    }
+  if ((millis() / 1000) - cont2 >= 15)
+  {
+    thing.handle();
+    cont2 = (millis() / 1000);
+    yield();
   }
 }
