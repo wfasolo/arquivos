@@ -3,10 +3,10 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 def valor(prepara):
-    X_train = prepara['X_train'],
-    X_test = prepara['X_test'],
-    y_train = prepara['y_train'],
-    y_test = prepara['y_test'],
+    X_train = prepara['X_train']
+    X_test = prepara['X_test']
+    y_train = prepara['y_train']
+    y_test = prepara['y_test']
     prev_trans = prepara['prev_trans']
 
     # Tainar modelo
