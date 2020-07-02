@@ -2,8 +2,8 @@ import leitura
 import correcao
 import prepro
 import KNeighbors
-import SVC
 import Florest
+import SVC
 import graficos
 
 leit = leitura.ler()
@@ -14,8 +14,8 @@ prepara = prepro.dados(corrige, leit['estacao'])
 
 dados_KN = KNeighbors.valor(prepara)
 
-dados_SVC = SVC.valor(prepara)
-
 dados_FL = Florest.valor(prepara)
 
-graficos.graf(corrige['corrigido'])
+#dados_SVC = SVC.valor(prepara)
+
+graficos.graf(corrige['corrigido'],dados_KN)

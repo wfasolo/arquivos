@@ -1,3 +1,4 @@
+import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
 
@@ -17,7 +18,8 @@ def valor(prepara):
     y_pred = model.predict(X_test)
 
     acur = metrics.accuracy_score(y_test, y_pred)
-
-    previsao = model.predict_proba(prev_trans)
+    
+    previsao = pd.DataFrame(model.predict_proba(prev_trans))
+    print(previsao)
 
     return {'acuracia': acur, 'previsao': previsao}

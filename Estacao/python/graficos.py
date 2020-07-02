@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import plotly.offline as py
 import plotly.graph_objs as go
 
-def graf(corrigido):
+def graf(corrigido,KNprev):
     
     plt.plot(corrigido['hora'], corrigido['Temp'])
     plt.xticks(rotation=90)
@@ -27,8 +27,23 @@ def graf(corrigido):
                     opacity=0.5,
                     showlegend=False
                     )
+    trace3= go.Scatter(x=corrigido['hora'],
+                    y=corrigido['Umid']*0.15,
+                    text=corrigido['Umid'],
+                    textposition='top center',
+                    mode='lines+markers+text',
+                    showlegend=False)
 
-    data_temp = [trace, trace2]
+    trace4 = go.Scatter(x=corrigido['hora'],
+                    y=KNprev['previsao'][0]*3,
+                    text=KNprev['previsao'][0]*100,
+                    textposition='top center',
+                    mode='lines+markers+text',
+                    showlegend=True,
+                    name='chuva')
+   
+    
+    data_temp = [trace, trace2,trace3,trace4]
     py.plot(data_temp)
 
 
