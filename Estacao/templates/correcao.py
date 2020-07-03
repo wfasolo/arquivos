@@ -14,7 +14,7 @@ def corrigir(ler):
     score_Pres2 = 0
     score_Umid2 = 0
     
-    scaler = MinMaxScaler(feature_range=(0, 99))
+    
 
     # generate a model of polynomial features
     for i in range(2, 20):
@@ -55,7 +55,13 @@ def corrigir(ler):
 
         if score_Umid > score_Umid2:
             score_Umid2 = score_Umid
-            umid=scaler.fit_transform(pd.DataFrame(pred_Umid))
+            umid=pd.DataFrame(pred_Umid)
+            minn=umid.min().values
+            maxx=umid.max().values
+            if maxx >99:
+                maxx=99
+            scaler = MinMaxScaler(feature_range=(minn,maxx))
+            umid=scaler.fit_transform(umid)
             pred_Umid2 = pd.DataFrame(umid).round(1)
             i_Umid = i
 
