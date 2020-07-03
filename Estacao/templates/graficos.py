@@ -3,7 +3,7 @@ import plotly.offline as py
 import plotly.graph_objs as go
 
 def graf(corrigido,SVCprev):
-    
+    '''
     plt.plot(corrigido['hora'], corrigido['Temp'])
     plt.xticks(rotation=90)
     plt.show()
@@ -12,7 +12,7 @@ def graf(corrigido,SVCprev):
     plt.show()
     plt.plot(corrigido['hora'], corrigido['Umid'])
     plt.xticks(rotation=90)
-    plt.show()
+    plt.show()'''
 
     trace = go.Scatter(x=corrigido['hora'],
                     y=corrigido['Temp'],
@@ -35,7 +35,7 @@ def graf(corrigido,SVCprev):
                     showlegend=False)
 
     trace4 = go.Scatter(x=corrigido['hora'],
-                    y=SVCprev['previsao'][1]*3,
+                    y=SVCprev['previsao'][1]-3,
                     text=(SVCprev['previsao'][1]*100).round(0),
                     textposition='top center',
                     mode='lines+markers+text',
