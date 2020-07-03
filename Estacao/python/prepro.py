@@ -10,7 +10,7 @@ def dados(corrigir, chuva):
     y = chuva['Chuv']
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.20,shuffle=True,stratify=y)
+        X, y, test_size=0.05,shuffle=True,stratify=y)
 
     scaler = StandardScaler()
     scaler.fit(X_train)

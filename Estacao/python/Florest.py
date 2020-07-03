@@ -19,5 +19,5 @@ def valor(prepara):
     acur = metrics.accuracy_score(y_test, y_pred)
 
     previsao = model.predict_proba(prev_trans)
-
+    
     return {'acuracia': acur, 'previsao': previsao}

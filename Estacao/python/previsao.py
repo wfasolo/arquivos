@@ -16,6 +16,6 @@ dados_KN = KNeighbors.valor(prepara)
 
 dados_FL = Florest.valor(prepara)
 
-#dados_SVC = SVC.valor(prepara)
+dados_SVC = SVC.valor(prepara)
 
-graficos.graf(corrige['corrigido'],dados_KN)
+graficos.graf(corrige['corrigido'],dados_SVC)

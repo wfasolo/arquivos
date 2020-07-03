@@ -20,6 +20,5 @@ def valor(prepara):
     acur = metrics.accuracy_score(y_test, y_pred)
     
     previsao = pd.DataFrame(model.predict_proba(prev_trans))
-    print(previsao)
-
+   
     return {'acuracia': acur, 'previsao': previsao}
