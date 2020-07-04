@@ -7,7 +7,7 @@ def ler():
 
     url_weather = 'https://api.weather.com/v1/geocode/-21.129/-41.677/forecast/hourly/48hour.json?units=m&language=pt-BR&apiKey=320c9252a6e642f38c9252a6e682f3c6'
 
-    url_station = "https://api.thinger.io/v1/users/wfasolo/buckets/dados_estacao1/data?authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJ0b2tlbl9lc3RfYmQiLCJ1c3IiOiJ3ZmFzb2xvIn0.6FnVjOdAxWpRGwNrVc1RwKtQPaZNNeCqlj3yZDcn-2U"
+    url_station = "https://api.thinger.io/v1/users/wfasolo/buckets/dados_estacao1/data?items=0&authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJidWNrZXQiLCJ1c3IiOiJ3ZmFzb2xvIn0.CrjRqDEFx4KDVCnkOTJtVjnZlkHehO0M_TGE3KEPZ10"
 
 
     # Dados site weather.com
@@ -43,6 +43,6 @@ def ler():
     dados = pd.concat([inv_station[-20:], weather_df[:24]], ignore_index=True)
     intervalo = pd.concat([pd.DataFrame(np.arange(1, 11, 0.5)), pd.DataFrame(
         np.arange(11, 35, 1))], ignore_index=True)
-
+    print(station_df)
     
     return {'dados': dados, 'intervalo': intervalo,'hora':hora,'estacao':station_df}
