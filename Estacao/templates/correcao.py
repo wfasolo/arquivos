@@ -55,7 +55,8 @@ def corrigir(ler):
 
         if score_Umid > score_Umid2:
             score_Umid2 = score_Umid
-            umid=scaler.fit_transform(pd.DataFrame(pred_Umid))
+            umid=pd.DataFrame(pred_Umid)
+            #umid=scaler.fit_transform(umid)
             pred_Umid2 = pd.DataFrame(umid).round(1)
             i_Umid = i
 
