@@ -101,7 +101,7 @@ void loop()
 
       pres = pres / (10000 * 0.99),
       temp = temp / 100,
-      umid = umid / (100 * 0.9);
+      umid = umid / (100 * 0.85);
       //
 
       // gravacao no banco de dados a cada 15 minutos
