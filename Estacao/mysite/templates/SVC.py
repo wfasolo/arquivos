@@ -10,7 +10,6 @@ def valor(prepara):
     y_test = prepara['y_test']
     prev_trans = prepara['prev_trans']
 
-
     # Tainar modelo
     model = SVC(kernel='rbf', gamma='auto', probability=True)
     model.fit(X_train, y_train)

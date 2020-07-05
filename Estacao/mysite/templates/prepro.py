@@ -8,9 +8,9 @@ def dados(corrigir, chuva):
    
     X = chuva.drop(['Chuv'], axis=1)
     y = chuva['Chuv']
-
+    print(y)
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.25,shuffle=True,stratify=y)
+        X, y, test_size=0.1)
 
     scaler = StandardScaler()
     scaler.fit(X_train)
