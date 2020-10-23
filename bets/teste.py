@@ -1,76 +1,79 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import requests
 import math
 
-key='&APIkey=6a6e60821e72b841ab0b6ae4f09e9379b3b3a48fb72237a6ee1f2eb51c7924e7'
-api='https://apiv2.apifootball.com/?action='
-acao='get_standings&'
-liga='league_id=68'
+key = '&APIkey=6a6e60821e72b841ab0b6ae4f09e9379b3b3a48fb72237a6ee1f2eb51c7924e7'
+api = 'https://apiv2.apifootball.com/?action='
+acao = 'get_standings&'
+liga = 'league_id=68'
 
-url=api+acao+liga+key
+url = api+acao+liga+key
 
 r = requests.get(url)
-tabela=pd.DataFrame(r.json()).drop([ 'away_league_W', 'away_league_D','away_league_L','away_league_position',
-       'away_promotion', 'home_league_W', 'home_league_D', 'home_league_L','home_league_position',
-       'home_promotion','country_name', 'league_id', 'league_name','overall_league_W', 'overall_league_D',
-       'overall_league_L', 'team_id', 'league_round', 'team_badge','overall_promotion'], axis=1)
+tabela = pd.DataFrame(r.json()).drop(['away_league_W', 'away_league_D', 'away_league_L', 'away_league_position', 'away_promotion', 'home_league_W', 'home_league_D', 'home_league_L', 'home_league_position',
+                                      'home_promotion', 'country_name', 'league_id', 'league_name', 'overall_league_W', 'overall_league_D', 'overall_league_L', 'team_id', 'league_round', 'team_badge', 'overall_promotion'], axis=1)
 
-tabela.columns=['NOME', 'POS', 'JOGOS','GP', 'GC', 'PTS','C_J','CGP','CGC', 'C_PTS', 'F_J', 'FGP', 'FGC', 'F_PTS']
+tabela.columns = ['NOME', 'POS', 'JOGOS', 'GP', 'GC', 'PTS',
+                  'C_J', 'CGP', 'CGC', 'C_PTS', 'F_J', 'FGP', 'FGC', 'F_PTS']
 
 print(tabela)
-tj=sum(tabela['JOGOS'].astype(int))
-tcgp=sum(tabela['CGP'].astype(int))
-tcgc=sum(tabela['CGC'].astype(int))
-tfgp=sum(tabela['FGP'].astype(int))
-tfgc=sum(tabela['FGC'].astype(int))
+
+tj = sum(tabela['JOGOS'].astype(int))  # total de jogos
+tgc = sum(tabela['CGP'].astype(int))  # total de gol casa
+tgf = sum(tabela['CGC'].astype(int))  # total de gol fora
 
 # media de gols campenato
-mcgp=tcgp/tj
-mcgc=tcgc/tj
-mfgp=tfgp/tj
-mfgc=tfgc/tj
+mgc = tgc/tj  # media de gol casa
+mgf = tgf/tj  # media de gol fora
 
-time1=tabela.loc[tabela['NOME']=='Internacional']
-time2=tabela.loc[tabela['NOME']=='Flamengo RJ']
+time1 = tabela.loc[tabela['NOME'] == 'Ceara']
+time2 = tabela.loc[tabela['NOME'] == 'Coritiba']
 
 # media de gols por time
-mcgpt1=time1['CGP'].astype(int)/time1['C_J'].astype(int)
-mcgct1=time1['CGC'].astype(int)/time1['C_J'].astype(int)
-mcgpt2=time2['CGP'].astype(int)/time2['C_J'].astype(int)
-mcgct2=time2['CGC'].astype(int)/time2['C_J'].astype(int)
 
-# forca dos times
-foct1=mcgpt1/mcgp
-fdct1=mcgct1/mcgc
-foct2=mcgpt2/mcgp
-fdct2=mcgct2/mcgc
+# media de gol pro time mandante
+mgptm = time1['CGP'].astype(int)/time1['C_J'].astype(int)
+# media de gol contra time mandante
+mgctm = time1['CGC'].astype(int)/time1['C_J'].astype(int)
+# media de gol pro time visitante
+mgptv = time2['FGP'].astype(int)/time2['C_J'].astype(int)
+# media de gol contra time visitante
+mgctv = time2['FGC'].astype(int)/time2['C_J'].astype(int)
 
-# poisson time 1
-lambt1=foct1.values*fdct2.values
-print(lambt1[0],foct1,fdct2)
+# forca do time mandante
+fotm = mgptm/mgc  # forca ofenciva time mandante
+fdtm = mgctm/mgf  # forca defenciva casa time 1
 
+# forca do time visitante
+fotv = mgptv/mgf  # forca ofenciva time visitante
+fdtv = mgctv/mgc  # forca defenciva fora time visitante
 
-f1 = []
+# poisson times
+lambtm = fotm.values*fdtv.values*mgc  # número provável de gols time mandante
+lambtv = fotv.values*fdtm.values*mgf  # número provável de gols time visitante
+print(lambtm, lambtv)
+golm = []
+golv = []
 for i in range(6):
-    f1.append(((lambt1[0]**i)*np.exp(-1.0*lambt1[0]))/math.factorial(i))
+    golm.append(((lambtm[0]**i)*np.exp(-1.0*lambtm[0]))/math.factorial(i))
+    golv.append(((lambtv[0]**i)*np.exp(-1.0*lambtv[0]))/math.factorial(i))
 
-print(f1)
-
-
-
-
-
-
-
+a = pd.DataFrame([golm, golm, golm, golm, golm, golm])
+b = pd.DataFrame([golv, golv, golv, golv, golv, golv])
+c = a.T*b
+d = c.round(2)
+print(d)
 
 
-
-
-
-
-
-
+corr = d*100
+plt.figure(figsize=(7, 5))
+sns.heatmap(corr, linewidths=0.2,
+            cmap=sns.diverging_palette(220, 10, as_cmap=True),
+            vmin=0, vmax=10, annot=True)
+plt.show()
 
 """
 acao='get_H2H'
