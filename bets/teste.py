@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import requests
 import math
+from statistics import mean
+
 
 key = '&APIkey=6a6e60821e72b841ab0b6ae4f09e9379b3b3a48fb72237a6ee1f2eb51c7924e7'
 api = 'https://apiv2.apifootball.com/?action='
@@ -13,15 +15,16 @@ liga = 'league_id=68'
 url = api+acao+liga+key
 
 r = requests.get(url)
-tabela = pd.DataFrame(r.json()).drop(['away_league_W', 'away_league_D', 'away_league_L', 'away_league_position', 'away_promotion', 'home_league_W', 'home_league_D', 'home_league_L', 'home_league_position',
-                                      'home_promotion', 'country_name', 'league_id', 'league_name', 'overall_league_W', 'overall_league_D', 'overall_league_L', 'team_id', 'league_round', 'team_badge', 'overall_promotion'], axis=1)
+rr = r.json()
+tabela = pd.DataFrame(rr).drop(['away_league_W', 'away_league_D', 'away_league_L', 'away_league_position', 'away_promotion', 'home_league_W', 'home_league_D', 'home_league_L', 'home_league_position',
+                                'home_promotion', 'country_name', 'league_id', 'league_name', 'overall_league_W', 'overall_league_D', 'overall_league_L', 'team_id', 'league_round', 'team_badge', 'overall_promotion'], axis=1)
 
 tabela.columns = ['NOME', 'POS', 'JOGOS', 'GP', 'GC', 'PTS',
                   'C_J', 'CGP', 'CGC', 'C_PTS', 'F_J', 'FGP', 'FGC', 'F_PTS']
 
 print(tabela)
 
-tj = sum(tabela['JOGOS'].astype(int))  # total de jogos
+tj = mean(tabela['JOGOS'].astype(int))*10  # total de jogos
 tgc = sum(tabela['CGP'].astype(int))  # total de gol casa
 tgf = sum(tabela['CGC'].astype(int))  # total de gol fora
 
@@ -29,8 +32,8 @@ tgf = sum(tabela['CGC'].astype(int))  # total de gol fora
 mgc = tgc/tj  # media de gol casa
 mgf = tgf/tj  # media de gol fora
 
-time1 = tabela.loc[tabela['NOME'] == 'Ceara']
-time2 = tabela.loc[tabela['NOME'] == 'Coritiba']
+time1 = tabela.loc[tabela['NOME'] == 'Internacional']
+time2 = tabela.loc[tabela['NOME'] == 'Flamengo RJ']
 
 # media de gols por time
 
@@ -38,10 +41,11 @@ time2 = tabela.loc[tabela['NOME'] == 'Coritiba']
 mgptm = time1['CGP'].astype(int)/time1['C_J'].astype(int)
 # media de gol contra time mandante
 mgctm = time1['CGC'].astype(int)/time1['C_J'].astype(int)
+
 # media de gol pro time visitante
-mgptv = time2['FGP'].astype(int)/time2['C_J'].astype(int)
+mgptv = time2['FGP'].astype(int)/time2['F_J'].astype(int)
 # media de gol contra time visitante
-mgctv = time2['FGC'].astype(int)/time2['C_J'].astype(int)
+mgctv = time2['FGC'].astype(int)/time2['F_J'].astype(int)
 
 # forca do time mandante
 fotm = mgptm/mgc  # forca ofenciva time mandante
@@ -54,25 +58,25 @@ fdtv = mgctv/mgc  # forca defenciva fora time visitante
 # poisson times
 lambtm = fotm.values*fdtv.values*mgc  # número provável de gols time mandante
 lambtv = fotv.values*fdtm.values*mgf  # número provável de gols time visitante
-print(lambtm, lambtv)
+
 golm = []
 golv = []
-for i in range(6):
+for i in range(5):
     golm.append(((lambtm[0]**i)*np.exp(-1.0*lambtm[0]))/math.factorial(i))
     golv.append(((lambtv[0]**i)*np.exp(-1.0*lambtv[0]))/math.factorial(i))
 
-a = pd.DataFrame([golm, golm, golm, golm, golm, golm])
-b = pd.DataFrame([golv, golv, golv, golv, golv, golv])
-c = a.T*b
+a = pd.DataFrame([golm, golm, golm, golm, golm])
+b = pd.DataFrame([golv, golv, golv, golv, golv])
+c = a.T*b*100
 d = c.round(2)
 print(d)
 
 
-corr = d*100
+corr = 80/d
 plt.figure(figsize=(7, 5))
 sns.heatmap(corr, linewidths=0.2,
             cmap=sns.diverging_palette(220, 10, as_cmap=True),
-            vmin=0, vmax=10, annot=True)
+            vmin=0, vmax=70, annot=True)
 plt.show()
 
 """
