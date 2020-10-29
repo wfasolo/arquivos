@@ -32,8 +32,8 @@ tgf = sum(tabela['CGC'].astype(int))  # total de gol fora
 mgc = tgc/tj  # media de gol casa
 mgf = tgf/tj  # media de gol fora
 
-time1 = tabela.loc[tabela['NOME'] == 'Internacional']
-time2 = tabela.loc[tabela['NOME'] == 'Flamengo RJ']
+time1 = tabela.loc[tabela['NOME'] == 'Atletico-MG']
+time2 = tabela.loc[tabela['NOME'] == 'Sport Recife']
 
 # media de gols por time
 
@@ -71,8 +71,24 @@ c = a.T*b*100
 d = c.round(2)
 print(d)
 
+mandante  = (d[0][1]+d[0][2]+d[0][3]+d[0][4]+d[1][2]+d[1][3]+d[1][4]+d[2][3]+d[2][4]+d[3][4])
+empate = (d[0][0]+d[1][1]+d[2][2]+d[3][3]+d[4][4])
+visitante = (d[1][0]+d[2][0]+d[3][0]+d[4][0]+d[2][1]+d[3][1]+d[4][1]+d[3][2]+d[4][2]+d[4][3])
+corrige = mandante+empate+visitante
+mandante = (1/(mandante/corrige)).round(2)
+empate = (1/(empate/corrige)).round(2)
+visitante = (1/(visitante/corrige)).round(2)
 
-corr = 80/d
+print('Resultado Final: ',mandante, empate, visitante)
+
+# under over 1.5
+under = (d[0][0]+d[1][0]+d[0][1])
+over = 100-under
+under = (100/under).round(2)
+over = (100/over).round(2)
+print('Under/Over: ',over, under)
+
+corr = 100/d
 plt.figure(figsize=(7, 5))
 sns.heatmap(corr, linewidths=0.2,
             cmap=sns.diverging_palette(220, 10, as_cmap=True),
