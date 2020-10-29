@@ -24,7 +24,7 @@ import seaborn as sns
 
 corr = d
 plt.figure(figsize = (7, 5))
-sns.heatmap(corr, linewidths = 0.2,
+sns.heatmap(corr, linewidths = 0.3,
             cmap = sns.diverging_palette(220, 10, as_cmap=True),
             vmin = 0, vmax = 10, annot = True)
 plt.show()
