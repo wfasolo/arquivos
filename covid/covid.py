@@ -22,7 +22,7 @@ test = pd.DataFrame(list(range(120)))
 
 # generate a model of polynomial features
 
-poly = PolynomialFeatures(degree=6, include_bias=False)
+poly = PolynomialFeatures(degree=3, include_bias=False)
 
 # transform the x data for proper fitting (for single variable type it returns,[1,x,x**2])
 X_ = poly.fit_transform(x_v)
