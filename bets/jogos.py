@@ -1,4 +1,4 @@
-https://rapidapi.com/api-sports/api/api-football/pricing
+#https://rapidapi.com/api-sports/api/api-football/pricing
 
 import requests
 import pandas as pd
@@ -7,8 +7,7 @@ acao = 'get_H2H'
 time1 = '&firstTeam=Internacional'
 time2 = '&secondTeam=Flamengo RJ'
 
-url = 'https://apiv2.apifootball.com/?action=get_events&from=2020-10-13&to=2020-11-02&timezone=America/Sao_Paulo&league_id=68'+key
-         https://apifootball.com/api/?action=get_events&from=2016-10-30&to=2016-11-01&league_id=62&APIkey=xxxxxxxxxxxxxx
+url = 'https://apiv2.apifootball.com/?action=get_events&from=2020-11-03&to=2020-11-12&timezone=America/Sao_Paulo&league_id=68'+key
 
 r = requests.get(url)
 
