@@ -12,7 +12,7 @@ paises = paises_df.drop_duplicates()
 paises = paises.dropna()
 paises = paises.reset_index()
 
-covid_e = covid_csv.loc[covid_csv['iso_code'] == 'ITA']
+covid_e = covid_csv.loc[covid_csv['iso_code'] == 'BRA']
 covid_d = covid_e.loc[covid_e['total_cases'] > 20]
 y_v = pd.DataFrame(range(len(covid_d['total_cases'])))
 x_v = pd.DataFrame(covid_d['total_cases'])

@@ -33,9 +33,10 @@ class Mega:
         megafacil = pd.DataFrame([mega_list['1ª Dezena'], mega_list['2ª Dezena'], mega_list['3ª Dezena'],
                                   mega_list['4ª Dezena'], mega_list['5ª Dezena'], mega_list['6ª Dezena']]).T
 
+        meg100=megafacil[-100:]
         (self.X_train, self.y_train) = (
-            megafacil[:-1].values, megafacil[1:].values)
-        self.ultimo = self.y_train[-10:-5]
+            meg100[:-1].values, meg100[1:].values)
+        self.ultimo = self.y_train[-1:]
 
         return self.X_train, self.y_train, self.ultimo
 
