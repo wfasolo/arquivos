@@ -1,5 +1,6 @@
 //sudo chmod 666 /dev/ttyUSB0
 
+
 #define sensor  A0
 #define saida  12
 
