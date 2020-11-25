@@ -14,11 +14,11 @@ paises = paises.reset_index()
 print(paises['iso_code'][1])
 
 covid_e = covid_csv.loc[covid_csv['iso_code'] == 'BRA']
-covid_d = covid_e.loc[covid_e['total_cases'] > 2000]
+covid_d = covid_e.loc[covid_e['total_cases'] > 10000]
 x_v = pd.DataFrame(range(len(covid_d['total_cases'])))
 y_v = pd.DataFrame(covid_d['total_cases'])
 yy = pd.DataFrame(((200000000-(covid_d['total_cases']*15))))
-test = pd.DataFrame(list(range(120)))
+test = pd.DataFrame(list(range(320)))
 
 # generate a model of polynomial features
 

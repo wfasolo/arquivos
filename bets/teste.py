@@ -32,8 +32,8 @@ tgf = sum(tabela['CGC'].astype(int))  # total de gol fora
 mgc = tgc/tj  # media de gol casa
 mgf = tgf/tj  # media de gol fora
 
-time1 = tabela.loc[tabela['NOME'] == 'Flamengo RJ']
-time2 = tabela.loc[tabela['NOME'] == 'Atletico-MG']
+time1 = tabela.loc[tabela['NOME'] == 'Sao Paulo']
+time2 = tabela.loc[tabela['NOME'] == 'Flamengo RJ']
 
 # media de gols por time
 

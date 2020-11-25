@@ -1,8 +1,13 @@
 //sudo chmod 666 /dev/ttyUSB0
 
+#include <OneWire.h> //BIBLIOTECA NECESSÁRIA PARA O DS18B20
+#include <DallasTemperature.h> //BIBLIOTECA NECESSÁRIA PARA O DS18B20
 
-#define sensor  A0
-#define saida  12
+#define DS18B20 A0
+#define saida 12
+
+OneWire ourWire(DS18B20);//CONFIGURA UMA INSTÂNCIA ONEWIRE PARA SE COMUNICAR COM DS18B20
+DallasTemperature sensors(&ourWire); //PASSA A TEMPERATURA PARA O DallasTemperature
 
 #include <ThingerESP8266.h>
 
@@ -23,31 +28,37 @@ float kp = 0.05,
       tempo = 1,
       dt = 0,
       valor = 0,
-      valor_ant = 0,
       temp = 0,
       pwm = 110,
       leitura = 1,
       setpoint = 30.5;
 
-
-
 void setup()
 {
-  pinMode(A0, INPUT);
+
   analogWrite(saida, pwm);
+  sensors.begin(); // INICIA O SENSOR DS18B20
 
   thing.add_wifi("LAB", "@@lucas@@");
 
-  thing["parametros"]  >> [](pson & out) {
+  thing["Parametros"] >> [](pson &out) {
     out["Temp"] = temp;
     out["PWM"] = pwm;
   };
-  thing["Setpoint"] << [](pson & in) {
-    if (in.is_empty()) {
-      in = setpoint;
+  thing["PID"] << [](pson &in) {
+    if (in.is_empty())
+    {
+      in["Setpoint"] = setpoint;
+      in["KP"] = kp;
+      in["KI"] = ki;
+      in["KD"] = kd;
     }
-    else {
-      setpoint = in;
+    else
+    {
+      setpoint = in["Setpoint"];
+      kp = in["KP"];
+      ki = in["KI"];
+      kd = in["KD"];
     }
   };
 }
@@ -60,8 +71,8 @@ void loop()
 void enviar()
 {
   // enviar dados
-  thing.stream(thing["parametros"]);
-  thing.stream(thing["Setpoint"]);
+  thing.stream(thing["Parametros"]);
+  thing.stream(thing["PID"]);
   thing.handle();
   yield();
 }
@@ -71,8 +82,8 @@ int media()
 {
 
   for (int x = 0; x < 50; x++)
-  {
-    leitura +=  analogRead(sensor);
+  {sensors.requestTemperatures();//REQUISITA A TEMPERATURA DO SENSOR
+    leitura += sensors.getTempCByIndex(0);
     delay(5);
   }
   leitura = leitura / 50;
@@ -82,12 +93,13 @@ int media()
 // --- Função controle ---
 void controle()
 {
-  valor_ant = valor;
-  int aberro = abs(erro);
 
   if ((millis() - tempo) >= 1000 * (5 - (4.99 * aberro)))
   {
+    float valor_ant = valor;
+    float aberro = abs(erro);
     valor = media();
+
     erro = ((setpoint - valor_ant) / (setpoint + valor));
     dt = (millis() - tempo) / 1000;
     tempo = millis();
@@ -111,6 +123,4 @@ void controle()
     enviar();
     yield();
   }
-
-
 }
