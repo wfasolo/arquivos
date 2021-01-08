@@ -170,5 +170,6 @@ while(condicao):
 
     print(jog[1])
 
+
 # espera
 time.sleep(2)
