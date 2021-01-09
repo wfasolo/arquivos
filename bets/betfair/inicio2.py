@@ -4,11 +4,8 @@
 import pandas as pd
 import json
 import requests
-token = 'aGNAEhYHZbd22B47vW6Pg3mtEeXwg4e8TTs60qh2HDU='
-Key1 = 'HzbBUzvGG92L0QJ2'
-key2 = 'mcpTvHCrfZa1Psf4'
 
-token = 'aGNAEhYHZbd22B47vW6Pg3mtEeXwg4e8TTs60qh2HDU='
+token = 'FiaB6XUGeMHCdDG6d113hBegDsNEnVYYt0ASdmkYm/Q='
 key1 = 'HzbBUzvGG92L0QJ2'
 key2 = 'mcpTvHCrfZa1Psf4'
 
