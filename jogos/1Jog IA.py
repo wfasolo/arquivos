@@ -1,9 +1,8 @@
 import time
 import pandas as pd
+import numpy as np
 import pygame
 import random
-from sklearn import metrics
-from sklearn.svm import SVC
 
 # definindo cores
 BLACK = (0, 0, 0)
@@ -12,7 +11,32 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-resultado = pd.DataFrame()
+jogador = 2
+j1 = pd.Series()
+j2 = pd.Series()
+jogadas = pd.DataFrame()
+condicao = True
+linha = 0
+Result = 9
+
+
+matriz = np.array([[1, 1, 1],
+                   [1, 1, 1],
+                   [1, 1, 1]]).astype(np.float32)
+
+pa = pd.Series([0, 1, 2, 0, 1, 2, 0, 1, 2])
+
+pb = pd.Series([0, 0, 0, 1, 1, 1, 2, 2, 2])
+
+p = pd.Series([[190, 185],
+               [190, 285],
+               [190, 385],
+               [290, 185],
+               [290, 285],
+               [290, 385],
+               [390, 185],
+               [390, 285],
+               [390, 385]])
 
 pygame.init()
 
@@ -22,9 +46,13 @@ screen = pygame.display.set_mode((600, 600))
 font = pygame.font.SysFont(None, 55)
 pygame.display.set_caption('Joga da Velha')
 
+# preenchendo o fundo com preto
+screen.fill(BLACK)
+
+# desenhando na superfície
+
 
 def tela():
-    screen.fill(BLACK)
     pygame.draw.line(screen, WHITE, [150, 250], [450, 250], 2)
     pygame.draw.line(screen, WHITE, [150, 350], [450, 350], 2)
 
@@ -33,6 +61,8 @@ def tela():
 
     # atualizando a tela
     pygame.display.flip()
+
+# definindo posição
 
 
 def posicao(posi, jogadores):
@@ -51,26 +81,37 @@ def posicao(posi, jogadores):
     pygame.display.flip()
 
 
-def jogad(jogadorj, c1, c2):
-    pos = random.randint(0, 8)
+def vez(jogavez):
+    if jogavez == 1:
+        pos = int(input('Entre com uma casa: '))-1
+
+    elif jogavez == 2:
+        pos = IA()
+
+    return pos
+
+
+def jogad(jogadorj, j111, j222):
+    pos = vez(jogadorj)
 
     if p[pos] != 0:
         posicao(p[pos], jogadorj)
         p[pos] = 0
 
         if jogadorj == 1:
-            j11[c1] = pos+1
-            resul[c1] = result
-            c1 = c1+1
+            j11 = pd.Series(pos+1)
+            j111 = j1.append(j11, ignore_index=True)
+            matriz[pa[pos], pb[pos]] = 1.5
             jogadorj = 2
 
         elif jogadorj == 2:
-            j22[c2] = pos+1
-            resul[c2] = result
-            c2 = c2+1
+            j22 = pd.Series(pos+1)
+            j222 = j2.append(j22, ignore_index=True)
+            matriz[pa[pos], pb[pos]] = 2
             jogadorj = 1
 
-    return [jogadorj, c1, c2]
+    
+    return [jogadorj, j111, j222]
 
 
 def ganhou_X():
@@ -195,90 +236,115 @@ def linhas(linha):
     pygame.display.flip()
 
 
-def IA(j1,j2):
+def IA():
+    print(matriz)
+    diag1 = np.prod(matriz.diagonal())
+    diag2 = (np.prod((np.fliplr(matriz).diagonal())))
+    col = matriz.prod(0)
+    lin = matriz.prod(1)
+
+    n_m = pd.Series(np.concatenate((col, lin, [diag1], [diag2])))
+
+    a = (list(n_m[n_m == 2.25].index))
+    n_m[a] = 5
+    a = (list(n_m[n_m == 3].index))
+    n_m[a] = 1
+    a = (list(n_m[n_m == 4].index))
+    n_m[a] = 10
+
+    if (matriz[0, 0] > 1):
+        t1 = 0
+    else:
+        t1 = n_m[0]+n_m[3]+n_m[6]
+
+    if (matriz[1, 0] > 1):
+        t2 = 0
+    else:
+        t2 = n_m[0]+n_m[4]
+
+    if (matriz[2, 0] > 1):
+        t3 = 0
+    else:
+        t3 = n_m[0]+n_m[5]+n_m[7]
+
+    if (matriz[0, 1] > 1):
+        t4 = 0
+    else:
+        t4 = n_m[1]+n_m[3]
+
+    if (matriz[1, 1] > 1):
+        t5 = 0
+    else:
+        t5 = n_m[1]+n_m[4]+n_m[6]+n_m[7]
+
+    if (matriz[2, 1] > 1):
+        t6 = 0
+    else:
+        t6 = n_m[1]+n_m[5]
+
+    if (matriz[0, 2] > 1):
+        t7 = 0
+    else:
+        t7 = n_m[2]+n_m[3]+n_m[7]
+
+    if (matriz[1, 2] > 1):
+        t8 = 0
+    else:
+        t8 = n_m[2]+n_m[4]
+
+    if (matriz[2, 2] > 1):
+        t9 = 0
+    else:
+        t9 = n_m[2]+n_m[5]+n_m[6]
+
+    valores = pd.Series([t1, t2, t3, t4, t5, t6, t7, t8, t9])
+    maximo=int(valores.idxmax())
+    print(valores, maximo)
+
+    return maximo
 
 
+tela()
 
-    (X_train, y_train) = ([j1[:-1].values,j1[:-1].values], [j1[:-1].values,j1[1:].values])
-    ultimo = y_train[-1:]
+while(condicao):
+    jogs = jogad(jogador, j1, j2)
 
-    # Tainar modelo
-    model = SVC(kernel='rbf', gamma='auto', probability=True)
-    model.fit(X_train, y_train)
+    jogador = jogs[0]
+    j1 = jogs[1]
+    j2 = jogs[2]
 
-    # Fazer previsoes
-    #y_pred = model.predict(X_test)
+    cond = ganhou_X()
+    condicao = cond[0]
+    if condicao == False:
+        linhas(cond[1])
+        text = font.render('Ganhou X!!!', True, WHITE)
+        screen.blit(text, [200, 550])
+        pygame.display.flip()
+        Result = 1
+        break
 
-    #acur = metrics.accuracy_score(y_test, y_pred)
+    cond = ganhou_O()
+    condicao = cond[0]
+    if condicao == False:
+        linhas(cond[1])
+        text = font.render('Ganhou O!!!', True, WHITE)
+        screen.blit(text, [200, 550])
+        pygame.display.flip()
+        Result = 2
+        break
 
-    previsao = model.predict_proba(ultimo)
-    print(previsao)
+    condicao = empate(condicao)
+    if condicao == False:
+        text = font.render('Empatou!!!', True, WHITE)
+        screen.blit(text, [200, 550])
+        pygame.display.flip()
+        Result = 0
+        break
 
 
-for ii in range(0, 1):
-    p = pd.Series([[190, 185],
-                   [190, 285],
-                   [190, 385],
-                   [290, 185],
-                   [290, 285],
-                   [290, 385],
-                   [390, 185],
-                   [390, 285],
-                   [390, 385]])
+# espera
+time.sleep(5)
+jogadas = jogadas.append([j1, j2], ignore_index=True).T
 
-    jogador = 1
-    j11 = pd.Series([0,0,0])
-    j22 = pd.Series([0])
-    resul = pd.Series([0])
-    jogadas = pd.DataFrame()
-    condicao = True
-    linha = 0
-    result = 9
-    c1 = 0
-    c2 = 0
 
-    tela()
-
-    while(condicao):
-
-        jogs = jogad(jogador, c1, c2)
-
-        jogador = jogs[0]
-        c1 = jogs[1]
-        c2 = jogs[2]
-        j1 = pd.Series(j11)
-        j2 = pd.Series(j22)
-        print(j1)
-        cond = ganhou_X()
-        condicao = cond[0]
-        if condicao == False:
-            linhas(cond[1])
-            text = font.render('Ganhou X!!!', True, WHITE)
-            screen.blit(text, [200, 550])
-            pygame.display.flip()
-            result = 1
-            break
-
-        cond = ganhou_O()
-        condicao = cond[0]
-        if condicao == False:
-            linhas(cond[1])
-            text = font.render('Ganhou O!!!', True, WHITE)
-            screen.blit(text, [200, 550])
-            pygame.display.flip()
-            result = 2
-            break
-
-        condicao = empate(condicao)
-        if condicao == False:
-            text = font.render('Empatou!!!', True, WHITE)
-            screen.blit(text, [200, 550])
-            pygame.display.flip()
-            result = 0
-            break
-
-    jogadas = jogadas.append([j1, j2], ignore_index=True).T
-    resul[c2] = result
-    resul2 = pd.DataFrame(resul)
-    resultado[ii] = [jogadas[0].values, jogadas[1].values, resul2[0].values]
-    time.sleep(1)
+print(jogadas)
