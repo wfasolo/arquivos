@@ -35,7 +35,7 @@ class LotoFacil:
                                   loto_list['Bola7'], loto_list['Bola8'], loto_list['Bola9'],
                                   loto_list['Bola10'], loto_list['Bola11'], loto_list['Bola12'],
                                   loto_list['Bola13'], loto_list['Bola14'], loto_list['Bola15']]).T
-
+        print(lotofacil)
         (self.X_train, self.y_train) = (
             lotofacil[:-1].values, lotofacil[1:].values)
         self.ultimo = self.y_train[-1:]

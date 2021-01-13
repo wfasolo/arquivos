@@ -1,11 +1,7 @@
-import numpy as np
-import pandas as pd
+import pygame
+from pygame_input import Inputs, Button, JoyButton
 
-matriz = np.array([[1, 41, 71],
-                   [2, 51, 81],
-                   [3, 61, 91]]).astype(np.float32)
+inputs = Inputs()
+inputs["fire"] = Button(pygame.K_SPACE, JoyButton(1))
+inputs["fire"].on_press_repeated(player.fire, delay=0.1)
 
-
-
-matriz[1, 1]=777.4
-print(matriz)
