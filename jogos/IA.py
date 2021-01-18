@@ -2,8 +2,8 @@ import time
 import pandas as pd
 import pygame
 import random
-from sklearn import metrics
-from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 # definindo cores
 BLACK = (0, 0, 0)
@@ -13,6 +13,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 resultado = pd.DataFrame()
+ccc=pd.DataFrame()
 
 pygame.init()
 
@@ -55,6 +56,9 @@ def jogad(jogadorj, c1, c2):
     pos = random.randint(0, 8)
 
     if p[pos] != 0:
+        ccc = pd.DataFrame([j11, j22]).T
+        ccc.fillna(0, inplace=True)
+
         posicao(p[pos], jogadorj)
         p[pos] = 0
 
@@ -65,10 +69,17 @@ def jogad(jogadorj, c1, c2):
             jogadorj = 2
 
         elif jogadorj == 2:
-            j22[c2] = pos+1
+            poss=IA(ccc)
+            print(poss)
+            time.sleep(2)
+            
+            j22[c2] = poss
             resul[c2] = result
             c2 = c2+1
             jogadorj = 1
+        
+
+
 
     return [jogadorj, c1, c2]
 
@@ -195,24 +206,17 @@ def linhas(linha):
     pygame.display.flip()
 
 
-def IA(j1,j2):
+def IA(cc):
 
 
-
-    (X_train, y_train) = ([j1[:-1].values,j1[:-1].values], [j1[:-1].values,j1[1:].values])
+    (X_train, y_train) = (cc[:-1], cc[1:])
     ultimo = y_train[-1:]
+    model1 = KNeighborsClassifier(n_neighbors=(1))
+    model1.fit(X_train, y_train)
+    previsao = model1.predict(ultimo)
+    prev=previsao[0][0]
 
-    # Tainar modelo
-    model = SVC(kernel='rbf', gamma='auto', probability=True)
-    model.fit(X_train, y_train)
-
-    # Fazer previsoes
-    #y_pred = model.predict(X_test)
-
-    #acur = metrics.accuracy_score(y_test, y_pred)
-
-    previsao = model.predict_proba(ultimo)
-    print(previsao)
+    return int(prev)
 
 
 for ii in range(0, 1):
@@ -227,8 +231,8 @@ for ii in range(0, 1):
                    [390, 385]])
 
     jogador = 1
-    j11 = pd.Series([0,0,0])
-    j22 = pd.Series([0])
+    j11 = pd.Series([5,1])
+    j22 = pd.Series([1,5])
     resul = pd.Series([0])
     jogadas = pd.DataFrame()
     condicao = True
@@ -248,7 +252,9 @@ for ii in range(0, 1):
         c2 = jogs[2]
         j1 = pd.Series(j11)
         j2 = pd.Series(j22)
-        print(j1)
+ 
+
+
         cond = ganhou_X()
         condicao = cond[0]
         if condicao == False:

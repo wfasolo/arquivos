@@ -1,5 +1,6 @@
 import time
 import pandas as pd
+import numpy as np
 import pygame
 import random
 
@@ -11,28 +12,24 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 jogador = 1
-j1 = pd.Series()
-j2 = pd.Series()
-jogadas = pd.DataFrame()
 condicao = True
 linha = 0
-Result = 9
 
-p = pd.Series([[190, 185],
-               [190, 285],
-               [190, 385],
-               [290, 185],
-               [290, 285],
-               [290, 385],
-               [390, 185],
-               [390, 285],
-               [390, 385]])
+p = pd.Series([[190, 185], [190, 285], [190, 385],
+               [290, 185], [290, 285], [290, 385],
+               [390, 185], [390, 285], [390, 385]])
+
+matriz = np.array([[0, 0, 0],
+                   [0, 0, 0],
+                   [0, 0, 0]]).astype(np.float32)
+
+pml = pd.Series([0, 1, 2, 0, 1, 2, 0, 1, 2])
+pmc = pd.Series([0, 0, 0, 1, 1, 1, 2, 2, 2])
 
 pygame.init()
 
 screen = pygame.display.set_mode((600, 600))
 screen.fill(BLACK)
-
 font = pygame.font.SysFont(None, 55)
 pygame.display.set_caption('Joga da Velha')
 
@@ -74,57 +71,55 @@ def vez(jogavez):
     return pos
 
 
-def jogad(jogadorj, j111, j222):
-    pos = vez(jogadorj)
+def jogad(jogador):
+    pos = vez(jogador)
 
-    if p[pos] != 0:
-        posicao(p[pos], jogadorj)
+    if p[pos] != 0 and condicao == True:
+        posicao(p[pos], jogador)
         p[pos] = 0
 
-        if jogadorj == 1:
-            j11 = pd.Series(pos+1)
-            j111 = j1.append(j11, ignore_index=True)
-            jogadorj = 2
+        if jogador == 1:
+            matriz[pml[pos], pmc[pos]] = 1
+            jogador = 2
 
-        elif jogadorj == 2:
-            j22 = pd.Series(pos+1)
-            j222 = j2.append(j22, ignore_index=True)
-            jogadorj = 1
+        elif jogador == 2:
+            matriz[pml[pos], pmc[pos]] = 2
+            jogador = 1
 
-    return [jogadorj, j111, j222]
+    return jogador
 
 
 def ganhou_X():
 
-    if (list(j1[j1 == 1].index) and list(j1[j1 == 2].index) and list(j1[j1 == 3].index)):
+    if (set(matriz.T[0]) == set([1, 1, 1])):
         linha = 1
         condicao = False
 
-    elif(list(j1[j1 == 4].index) and list(j1[j1 == 5].index) and list(j1[j1 == 6].index)):
+    elif(set(matriz.T[1]) == set([1, 1, 1])):
         linha = 2
         condicao = False
 
-    elif(list(j1[j1 == 7].index) and list(j1[j1 == 8].index) and list(j1[j1 == 9].index)):
+    elif(set(matriz.T[2]) == set([1, 1, 1])):
         linha = 3
         condicao = False
 
-    elif(list(j1[j1 == 1].index) and list(j1[j1 == 4].index) and list(j1[j1 == 7].index)):
+    elif(set(matriz[0]) == set([1, 1, 1])):
         linha = 4
         condicao = False
 
-    elif(list(j1[j1 == 2].index) and list(j1[j1 == 5].index) and list(j1[j1 == 8].index)):
+    elif(set(matriz[1]) == set([1, 1, 1])):
         linha = 5
         condicao = False
 
-    elif(list(j1[j1 == 3].index) and list(j1[j1 == 6].index) and list(j1[j1 == 9].index)):
+    elif(set(matriz[2]) == set([1, 1, 1])):
         linha = 6
         condicao = False
 
-    elif(list(j1[j1 == 1].index) and list(j1[j1 == 5].index) and list(j1[j1 == 9].index)):
+    elif(set(matriz.diagonal()) == set([1, 1, 1])):
         linha = 7
         condicao = False
 
-    elif(list(j1[j1 == 3].index) and list(j1[j1 == 5].index) and list(j1[j1 == 7].index)):
+    elif(set(np.fliplr(matriz).diagonal()) == set([1, 1, 1])):
         linha = 8
         condicao = False
 
@@ -137,35 +132,35 @@ def ganhou_X():
 
 def ganhou_O():
 
-    if (list(j2[j2 == 1].index) and list(j2[j2 == 2].index) and list(j2[j2 == 3].index)):
+    if (set(matriz.T[0]) == set([2, 2, 2])):
         linha = 1
         condicao = False
 
-    elif(list(j2[j2 == 4].index) and list(j2[j2 == 5].index) and list(j2[j2 == 6].index)):
+    elif(set(matriz.T[1]) == set([2, 2, 2])):
         linha = 2
         condicao = False
 
-    elif(list(j2[j2 == 7].index) and list(j2[j2 == 8].index) and list(j2[j2 == 9].index)):
+    elif(set(matriz.T[2]) == set([2, 2, 2])):
         linha = 3
         condicao = False
 
-    elif(list(j2[j2 == 1].index) and list(j2[j2 == 4].index) and list(j2[j2 == 7].index)):
+    elif(set(matriz[0]) == set([2, 2, 2])):
         linha = 4
         condicao = False
 
-    elif(list(j2[j2 == 2].index) and list(j2[j2 == 5].index) and list(j2[j2 == 8].index)):
+    elif(set(matriz[1]) == set([2, 2, 2])):
         linha = 5
         condicao = False
 
-    elif(list(j2[j2 == 3].index) and list(j2[j2 == 6].index) and list(j2[j2 == 9].index)):
+    elif(set(matriz[2]) == set([2, 2, 2])):
         linha = 6
         condicao = False
 
-    elif(list(j2[j2 == 1].index) and list(j2[j2 == 5].index) and list(j2[j2 == 9].index)):
+    elif(set(matriz.diagonal()) == set([2, 2, 2])):
         linha = 7
         condicao = False
 
-    elif(list(j2[j2 == 3].index) and list(j2[j2 == 5].index) and list(j2[j2 == 7].index)):
+    elif(set(np.fliplr(matriz).diagonal()) == set([2, 2, 2])):
         linha = 8
         condicao = False
 
@@ -216,24 +211,18 @@ def linhas(linha):
     pygame.display.flip()
 
 
-tela()
-
-while(condicao):
-    jogs = jogad(jogador, j1, j2)
-
-    jogador = jogs[0]
-    j1 = jogs[1]
-    j2 = jogs[2]
+def final():
+    Result = 9
 
     cond = ganhou_X()
     condicao = cond[0]
+
     if condicao == False:
         linhas(cond[1])
         text = font.render('Ganhou X!!!', True, WHITE)
         screen.blit(text, [200, 550])
         pygame.display.flip()
         Result = 1
-        break
 
     cond = ganhou_O()
     condicao = cond[0]
@@ -243,7 +232,6 @@ while(condicao):
         screen.blit(text, [200, 550])
         pygame.display.flip()
         Result = 2
-        break
 
     condicao = empate(condicao)
     if condicao == False:
@@ -251,12 +239,20 @@ while(condicao):
         screen.blit(text, [200, 550])
         pygame.display.flip()
         Result = 0
+
+    return Result
+
+
+tela()
+
+while(condicao):
+
+    jogador = jogad(jogador)
+
+    fim = final()
+
+    if fim != 9:
         break
 
 
-# espera
 time.sleep(5)
-jogadas = jogadas.append([j1, j2], ignore_index=True).T
-
-
-print(linha)
