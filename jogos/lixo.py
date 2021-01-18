@@ -11,14 +11,16 @@ c = [[1], [2], [3], [4], [5]]
 for i in range(5):
 
     a.append(i)
-    b = b.append([a])
+    b = b.append([a], ignore_index=True)
 
 b = b.fillna(0)
 
 model1 = KNeighborsClassifier(n_neighbors=(1))
 model1.fit(b, c)
 
-previsao = model1.predict([[0, 1, 2, 0, 0]])
+ultimo = [b.T[len(b)-1].values]
+
+previsao = model1.predict(ultimo)
 
 print('a',previsao)
 
@@ -26,5 +28,5 @@ model = SVC(kernel='rbf', gamma='auto', probability=True)
 model.fit(b,c)
 
 # Fazer previsoes
-y_pred = model.predict([[0, 1, 2, 0, 0]])
+y_pred = model.predict(ultimo)
 print('b',y_pred)
