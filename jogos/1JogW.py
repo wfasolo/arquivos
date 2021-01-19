@@ -12,16 +12,12 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 jogador = 1
+
+jogadas = pd.DataFrame()
+
+
 condicao = True
 linha = 0
-
-p = pd.Series([[190, 185], [190, 285], [190, 385],
-               [290, 185], [290, 285], [290, 385],
-               [390, 185], [390, 285], [390, 385]])
-
-matriz = np.array([[0, 0, 0],
-                   [0, 0, 0],
-                   [0, 0, 0]]).astype(np.float32)
 
 pml = pd.Series([0, 1, 2, 0, 1, 2, 0, 1, 2])
 pmc = pd.Series([0, 0, 0, 1, 1, 1, 2, 2, 2])
@@ -29,12 +25,13 @@ pmc = pd.Series([0, 0, 0, 1, 1, 1, 2, 2, 2])
 pygame.init()
 
 screen = pygame.display.set_mode((600, 600))
-screen.fill(BLACK)
+
 font = pygame.font.SysFont(None, 55)
 pygame.display.set_caption('Joga da Velha')
 
 
 def tela():
+    screen.fill(BLACK)
     pygame.draw.line(screen, WHITE, [150, 250], [450, 250], 2)
     pygame.draw.line(screen, WHITE, [150, 350], [450, 350], 2)
 
@@ -45,18 +42,18 @@ def tela():
     pygame.display.flip()
 
 
-def posicao(posi, jogadores):
+def posicao(pos, jogador):
 
-    if jogadores == 1:
+    if jogador == 1:
         jog = 'X'
 
-    if jogadores == 2:
+    if jogador == 2:
         jog = "O"
 
     time.sleep(0.2)
 
     text = font.render(jog, True, WHITE)
-    screen.blit(text, posi)
+    screen.blit(text, pos)
 
     pygame.display.flip()
 
@@ -71,11 +68,15 @@ def vez(jogavez):
     return pos
 
 
-def jogad(jogador):
+def jogad(jogador, jogadas):
     pos = vez(jogador)
 
     if p[pos] != 0 and condicao == True:
         posicao(p[pos], jogador)
+        jogada.append((pos+1))
+        jogadas = pd.DataFrame(
+            [[pd.Series(jogada).values, pos+1]]).append(jogadas, ignore_index=True)
+
         p[pos] = 0
 
         if jogador == 1:
@@ -86,7 +87,7 @@ def jogad(jogador):
             matriz[pml[pos], pmc[pos]] = 2
             jogador = 1
 
-    return jogador
+    return [jogador, jogadas]
 
 
 def ganhou_X():
@@ -216,7 +217,6 @@ def final():
 
     cond = ganhou_X()
     condicao = cond[0]
-
     if condicao == False:
         linhas(cond[1])
         text = font.render('Ganhou X!!!', True, WHITE)
@@ -243,16 +243,30 @@ def final():
     return Result
 
 
-tela()
+for cont in range(5):
+    jogada = []
 
-while(condicao):
+    p = pd.Series([[190, 185], [190, 285], [190, 385],
+                   [290, 185], [290, 285], [290, 385],
+                   [390, 185], [390, 285], [390, 385]])
 
-    jogador = jogad(jogador)
+    matriz = np.array([[0, 0, 0],
+                       [0, 0, 0],
+                       [0, 0, 0]])
 
-    fim = final()
+    tela()
 
-    if fim != 9:
-        break
+    while(condicao):
 
+        jogar = jogad(jogador, jogadas)
+        jogador = jogar[0]
+        jogadas = jogar[1]
+        print(jogadas)
 
-time.sleep(5)
+        fim = final()
+
+        if fim != 9:
+            break
+
+    print(jogadas)
+    time.sleep(5)
