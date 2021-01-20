@@ -4,6 +4,11 @@ import numpy as np
 import pygame
 import random
 
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import metrics
+from sklearn.svm import SVC
+
 # definindo cores
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -12,12 +17,14 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 jogador = 1
+jogacum = []
 
-jogadas = pd.DataFrame()
 
+jogadas = pd.DataFrame([[0, 0]], columns=[0, 1])
 
 condicao = True
 linha = 0
+
 
 pml = pd.Series([0, 1, 2, 0, 1, 2, 0, 1, 2])
 pmc = pd.Series([0, 0, 0, 1, 1, 1, 2, 2, 2])
@@ -59,11 +66,15 @@ def posicao(pos, jogador):
 
 
 def vez(jogavez):
+
     if jogavez == 1:
         pos = int(input('Entre com uma casa: '))-1
 
     elif jogavez == 2:
-        pos = random.randint(0, 8)
+        if len(jogadas) < 8:
+            pos = random.randint(0, 8)
+        else:
+            pos = IA()
 
     return pos
 
@@ -74,8 +85,9 @@ def jogad(jogador, jogadas):
     if p[pos] != 0 and condicao == True:
         posicao(p[pos], jogador)
         jogada.append((pos+1))
-        jogadas = pd.DataFrame(
-            [[pd.Series(jogada).values, pos+1]]).append(jogadas, ignore_index=True)
+        jogacum.append((pos+1))
+        jogadas = jogadas.append([jogada], ignore_index=True)
+        jogadas = jogadas.fillna(0)
 
         p[pos] = 0
 
@@ -87,7 +99,7 @@ def jogad(jogador, jogadas):
             matriz[pml[pos], pmc[pos]] = 2
             jogador = 1
 
-    return [jogador, jogadas]
+    return [jogador, jogadas, jogacum]
 
 
 def ganhou_X():
@@ -243,6 +255,21 @@ def final():
     return Result
 
 
+def IA():
+    x = jogadas.drop(len(jogadas)-1)
+    y = jogacum
+
+    model = SVC(kernel='rbf', gamma='auto', probability=True)
+
+    ultimo = [jogadas.T[len(jogadas)-1].values]
+    print(x, y,ultimo)
+    model.fit(x, y)
+    previsao = model.predict(ultimo)
+    print(previsao[0])
+
+    return previsao[0]-1
+
+
 for cont in range(5):
     jogada = []
 
@@ -261,12 +288,13 @@ for cont in range(5):
         jogar = jogad(jogador, jogadas)
         jogador = jogar[0]
         jogadas = jogar[1]
-        print(jogadas)
+        jogacum = jogar[2]
 
         fim = final()
 
         if fim != 9:
+            print(jogadas)
+
             break
 
-    print(jogadas)
     time.sleep(5)

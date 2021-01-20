@@ -44,6 +44,7 @@ model1 = KNeighborsClassifier(n_neighbors=(1))
 model1.fit(b, c)
 
 ultimo = [b.T[len(b)-1].values]
+print('ggg',ultimo)
 
 previsao = model1.predict(ultimo)
 
@@ -51,7 +52,7 @@ print('a',previsao)
 
 model = SVC(kernel='rbf', gamma='auto', probability=True)
 model.fit(b,c)
-
+print(b)
 # Fazer previsoes
 y_pred = model.predict(ultimo)
 print('b',y_pred)
