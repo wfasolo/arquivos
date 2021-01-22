@@ -71,7 +71,7 @@ def vez(jogavez):
         pos = int(input('Entre com uma casa: '))-1
 
     elif jogavez == 2:
-        if len(jogadas) < 8:
+        if len(jogadas) < 18:
             pos = random.randint(0, 8)
         else:
             pos = IA()
