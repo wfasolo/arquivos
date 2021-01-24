@@ -1,5 +1,6 @@
 
 # https://www.infoq.com/br/news/2019/06/tensorflow-chrome-dinosaur-game/
+# https://www.digitalocean.com/community/tutorials/como-construir-uma-rede-neural-para-reconhecer-digitos-manuscritos-com-o-tensorflow-pt
 
 import pandas as pd
 import numpy as np
