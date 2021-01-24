@@ -10,8 +10,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
 from sklearn.svm import SVC
 import tensorflow as tf
-from tensorflow import keras
-
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import SGD
 
 
 jogadas = pd.DataFrame()
@@ -44,50 +45,23 @@ for i in range(5):
 
 b = b.fillna(0)
 
-model1 = KNeighborsClassifier(n_neighbors=(1))
-model1.fit(b, c)
-
 ultimo = [b.T[len(b)-1].values]
-print('ggg', ultimo)
 
-previsao = model1.predict(ultimo)
 
-print('a', previsao)
+model3 = Sequential()
+model3.add(Dense(128, input_shape=(5,), activation="relu"))
+model3.add(Dense(64, activation="relu"))
+model3.add(Dense(1, activation="relu"))
 
-model = SVC(kernel='rbf', gamma='auto', probability=True)
-model.fit(b, c)
-print(b)
-# Fazer previsoes
-y_pred = model.predict(ultimo)
-print('b', y_pred)
+optimizer = tf.keras.optimizers.RMSprop(0.001)
 
-model = tf.keras.models.Sequential([tf.keras.layers.Dense(16, activation='relu', input_shape=(
-    5,)), tf.keras.layers.Dropout(0.2), tf.keras.layers.Dense(6)])
+model3.compile(loss='poisson',
+               optimizer='adam',
+               metrics=['mse'])
 
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+H = model3.fit(b.values, np.ravel(c), batch_size=128, epochs=100, verbose=2)
 
-ultimo = [jogadas.T[len(jogadas)-1].values]
+predictions = model3.predict([[0,1, 2, 3, 4]])
+print(predictions)
+print(b.values)
 print(np.ravel(c))
-print(ultimo)
-#model.fit(b.values, np.ravel(c), epochs=10)
-y_pred = model.predict([ultimo])
-
-print(y_pred)
-
-
-model1 = tf.keras.models.Sequential()
-model1.add(tf.keras.layers.Flatten())
-model1.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
-model1.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
-model1.add(tf.keras.layers.Dense(10, activation=tf.nn.softmax))
-
-model1.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
-
-model1.fit(b.values, np.ravel(c), epochs=5, batch_size=1, verbose=1)
-# model.fit(X_train, y_train, epochs=10)
-predictions = model1.predict([[1,2,3,4,5]])
-print('First prediction:', predictions[0])
-
