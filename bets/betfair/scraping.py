@@ -11,7 +11,7 @@ soup = BeautifulSoup(content, 'html.parser')
 table = soup.find_all(name='table')
 
 table_str = str(table)
-df = pd.read_html(table_str)[686]
+df = pd.read_html(table_str)[len(pd.read_html(table_str))-1]
 tabela=pd.DataFrame([df['Team rating']['off.'],df['Team rating']['def.']]).T
 time=df['Unnamed: 0_level_0']['team']
 
