@@ -1,10 +1,22 @@
 import time
+import json
 import pandas as pd
 import numpy as np
 import pygame
 import random
 import tensorflow as tf
-from tensorflow import keras
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import SGD
+
+arquivo = open('/home/casa/Documentos/arquivos/jogos/modelos/velhax.txt', 'r')
+dadosx = pd.read_fwf(arquivo, index_col=0)
+arquivo.close()
+
+arquivo = open('/home/casa/Documentos/arquivos/jogos/modelos/velhay.txt', 'r')
+dadosy = json.loads(arquivo.read())
+arquivo.close()
+print(dadosy)
 
 # definindo cores
 BLACK = (0, 0, 0)
@@ -13,14 +25,11 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-jogador = 1
-jogacum = []
-
-
-jogadas = pd.DataFrame([[0, 0]], columns=[0, 1])
-
 condicao = True
 linha = 0
+jogador = 1
+jogacum = dadosy
+jogadas = pd.DataFrame(dadosx.values)
 
 
 pml = pd.Series([0, 1, 2, 0, 1, 2, 0, 1, 2])
@@ -68,7 +77,7 @@ def vez(jogavez):
         pos = int(input('Entre com uma casa: '))-1
 
     elif jogavez == 2:
-        if len(jogadas) < 8:
+        if len(jogadas) < 20:
             pos = random.randint(0, 8)
         else:
             pos = IA()
@@ -253,21 +262,29 @@ def final():
 
 
 def IA():
-    x = jogadas.drop(len(jogadas)-1)
-    y = jogacum
+    predictions = 0
+    while(predictions == 0):
+        x = jogadas.drop(len(jogadas)-1)
+        y = np.ravel(jogacum)
+        ultimo = [jogadas.T[len(jogadas)-1].values]
+        ultimo = list(np.ravel(ultimo))
 
-    model = tf.keras.models.Sequential([tf.keras.layers.Dense(16, activation='relu', input_shape=(13,)),tf.keras.layers.Dropout(0.2),tf.keras.layers.Dense(3)])
+        model3 = Sequential()
+        model3.add(Dense(125, input_shape=(len(ultimo),), activation="relu"))
+        model3.add(Dense(75, activation="relu"))
+        model3.add(Dense(1, activation="relu"))
 
-    model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+        optimizer = tf.keras.optimizers.RMSprop(0.001)
 
-    ultimo = [jogadas.T[len(jogadas)-1].values]
- 
-    model.fit(x, y, epochs=10)
-    y_pred = model.predict(X_test)
+        model3.compile(loss='MSE', optimizer='adam', metrics=['mse'])
 
-    print(y_pred)
+        model3.fit(x.values, y, batch_size=128, epochs=100, verbose=0)
 
-    return y_pred
+        predictions = model3.predict([ultimo])
+
+        print(int(round(predictions[0][0], 0)))
+
+    return int(round(predictions[0][0], 0))-1
 
 
 for cont in range(5):
@@ -293,7 +310,16 @@ for cont in range(5):
         fim = final()
 
         if fim != 9:
+            arquivo = open(
+                '/home/casa/Documentos/arquivos/jogos/modelos/velhax.txt', 'w')
+            arquivo.write(str(jogadas))
+            arquivo.close()
+            arquivo = open(
+                '/home/casa/Documentos/arquivos/jogos/modelos/velhay.txt', 'w')
+            arquivo.write(json.dumps(jogacum))
+            arquivo.close()
             print(jogadas)
+            print(type(jogacum))
 
             break
 
