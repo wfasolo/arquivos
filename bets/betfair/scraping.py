@@ -25,7 +25,8 @@ def scrap():
             letra=""
         nomes=[nome[0]+nome[1]+nome[2]+letra]
         times.append(nomes[0])
-        
-    tabelas=pd.DataFrame([pd.Series(times),tabela['off.'],tabela['def.']],index=['time','ofs','def']).T
-   
+    pts=[62,58,57,58,52,51,50,45,45,44,45,42,42,35,35,36,35,29,27,23]   
+    tabelas=pd.DataFrame([pd.Series(times),tabela['off.'],tabela['def.'],pd.Series(pts)],index=['time','ofs','def','pts']).T
+    
+
     return tabelas

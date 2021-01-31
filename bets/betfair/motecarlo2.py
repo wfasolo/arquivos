@@ -4,20 +4,20 @@ import math
 import random
 import scraping as sc
 
-tabela=sc.scrap()
-#print(tabela)
-perg1=input("time casa: ")
-perg2=input("time fora: ")
-t1=tabela.loc[tabela['time'] == perg1]
-t2=tabela.loc[tabela['time'] == perg2]
+tabela = sc.scrap()
+print(tabela)
+perg1 = input("time casa: ")
+perg2 = input("time fora: ")
+t1 = tabela.loc[tabela['time'] == perg1]
+t2 = tabela.loc[tabela['time'] == perg2]
 
 prob1 = 0
 prob2 = 0
 empate = 0
 time1 = t1['ofs'].values[0]*t2['def'].values[0]
 time2 = t2['ofs'].values[0]*t1['def'].values[0]
-print(time1,time2)
-propabilidade = []
+print(time1, time2)
+
 
 poisson1 = [0, 0, 0, 0, 0, 0]
 poisson2 = [0, 0, 0, 0, 0, 0]
@@ -35,7 +35,7 @@ for i in range(0, 6):
 
 for linha in range(0, 6):
     for coluna in range(0, 6):
-        gols[linha, coluna] = round(poisson1[linha]*poisson2[coluna]*100, 2)
+        gols[linha, coluna] = round(poisson1[linha]*poisson2[coluna]*100, 3)
 
 for linha in range(0, 6):
     for coluna in range(0, 6):
@@ -48,22 +48,41 @@ for linha in range(0, 6):
 
 print(prob1, empate, prob2)
 
-for i in range(100):
-    
+cs = 0
+ep = 0
+fr = 0
+for ii in range(100):
+    propabilidade = []
+    for i in range(5):
+        rd = random.randrange(100)
 
-    if i < prob1:
-        propabilidade.append('casa')
+        if rd < prob1:
+            propabilidade.append('casa')
 
-    elif i < (empate+prob1):
-        propabilidade.append('empate')
+        elif rd < (empate+prob1):
+            propabilidade.append('empate')
 
+        else:
+            propabilidade.append('fora')
+
+    a = pd.Series(propabilidade)
+    '''print(" ")
+    print('casa: ', len(a.loc[a == 'casa']))
+    print('empate: ', len(a.loc[a == 'empate']))
+    print('fora: ', len(a.loc[a == 'fora']))'''
+
+    if len(a.loc[a == 'casa']) > len(a.loc[a == 'fora']):
+        cs += 1
+    elif len(a.loc[a == 'casa']) < len(a.loc[a == 'fora']):
+        fr += 1
     else:
-        propabilidade.append('fora')
+        ep += 1
 
 
-a = pd.Series(propabilidade)
-print('casa: ', len(a.loc[a == 'casa']))
-print('empate: ', len(a.loc[a == 'empate'])))
-print('fora: ', len(a.loc[a == 'fora']))
 print(gols)
+print(np.unravel_index(gols.argmax(), gols.shape))
+
+print(cs, ep, fr)
+
+
 
