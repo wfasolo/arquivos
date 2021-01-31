@@ -5,44 +5,47 @@ import random
 
 jfla = ['Spo', 'Vas', 'Bra', 'Cor', 'Int', 'São']
 jint = ['Bra', 'AtlP', 'Spo', 'Vas', 'Fla', 'Cor']
-vitFla = 0
-vitInt = 0
+
+vf=0
+vi=0
 
 tabela = sc.scrap()
 
-for i in range(len(jfla)):
-    result = dd.fim(tabela, 'Fla', jfla[i])
-    vitFla = vitFla+result[1]
+for ii in range(10000):
+    vitFla = 0
+    empFla=0
+    vitInt = 0
+    empInt=0
 
-    print('Fla x', jfla[i], ' :', result)
+    for i in range(len(jfla)):
+        result = dd.fim(tabela, 'Fla', jfla[i])
+        vitFla = vitFla+result[1]
+        empFla=empFla+result[2]
 
-print(' ')
+        #print('Fla x', jfla[i], ' :', result)
 
-for i in range(len(jint)):
-    result = dd.fim(tabela, 'Int', jint[i])
-    vitInt = vitInt+result[1]
+    print(' ')
 
-    print('Int x', jint[i], ' :', result)
+    for i in range(len(jint)):
+        result = dd.fim(tabela, 'Int', jint[i])
+        vitInt = vitInt+result[1]
+        empInt=empInt+result[2]
 
-print('')
-print(vitFla, vitInt)
-print(round((58+18*vitFla/600), 0), round((62+18*vitInt/600), 0))
+        #print('Int x', jint[i], ' :', result)
 
-t1 = tabela.loc[tabela['time'] == 'Fla']
-t2 = tabela.loc[tabela['time'] == jfla[i]]
+    ptFla=58+empFla+3*vitFla
+    ptInt=62+empInt+3*vitInt
+   # print('')
+   # print(vitFla, vitInt)
+    #print(round((ptFla), 0), round((ptInt), 0))
 
-aleotorio = random.randrange(1, 3)
+    if ptFla>ptInt:
+        vf+=1
+    else:
+        vi+=1
+
+    porcf=int(100*vf/(vf+vi))
+    porci=int(100-100*vf/(vi))
+    print(porcf,porci)
 
 
-if aleotorio == 1:
-    t1['pts'] = t1['pts'].values[0]+3
-    result[1] = result[1]-1
-elif aleotorio == 2:
-    t1['pts'] = t1['pts'].values[0]+1
-    t2['pts'] = t2['pts'].values[0]+1
-    result[2] = result[2]-1
-else:
-    t2['pts'] = t2['pts'].values[0]+3
-    result[3] = result[3]-1
-
-print(t1['pts'])

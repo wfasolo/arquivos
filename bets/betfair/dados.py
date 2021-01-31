@@ -47,7 +47,7 @@ def fim(tabela,perg1,perg2):
     cs = 0
     ep = 0
     fr = 0
-    for ii in range(10):
+    for ii in range(1):
         propabilidade = []
         for i in range(3):
             rd = random.randrange(100)
@@ -72,4 +72,4 @@ def fim(tabela,perg1,perg2):
 
     placar = (np.unravel_index(gols.argmax(), gols.shape))
 
-    return [list(placar), cs/200, ep/200, fr/200]
+    return [list(placar), cs, ep, fr]
