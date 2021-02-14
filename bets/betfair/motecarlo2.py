@@ -16,7 +16,7 @@ prob2 = 0
 empate = 0
 time1 = t1['ofs'].values[0]*t2['def'].values[0]
 time2 = t2['ofs'].values[0]*t1['def'].values[0]
-print(time1, time2)
+print(round(time1,1), round(time2,1))
 
 
 poisson1 = [0, 0, 0, 0, 0, 0]
@@ -35,7 +35,7 @@ for i in range(0, 6):
 
 for linha in range(0, 6):
     for coluna in range(0, 6):
-        gols[linha, coluna] = round(poisson1[linha]*poisson2[coluna]*100, 3)
+        gols[linha, coluna] = round(poisson1[linha]*poisson2[coluna]*100, 1)
 
 for linha in range(0, 6):
     for coluna in range(0, 6):
@@ -51,9 +51,9 @@ print(prob1, empate, prob2)
 cs = 0
 ep = 0
 fr = 0
-for ii in range(100):
+for ii in range(1000):
     propabilidade = []
-    for i in range(5):
+    for i in range(3):
         rd = random.randrange(100)
 
         if rd < prob1:
@@ -82,7 +82,7 @@ for ii in range(100):
 print(gols)
 print(np.unravel_index(gols.argmax(), gols.shape))
 
-print(cs, ep, fr)
+print(round(cs/ii*100,1), round(ep/ii*100,1), round(fr/ii*100,1))
 
 
 

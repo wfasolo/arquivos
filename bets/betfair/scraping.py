@@ -12,6 +12,9 @@ def scrap():
     table = soup.find_all(name='table')
 
     table_str = str(table)
+    for l in range(10):
+        print(pd.read_html(table_str)[l])
+        
     df = pd.read_html(table_str)[len(pd.read_html(table_str))-1]
     tabela=pd.DataFrame([df['Team rating']['off.'],df['Team rating']['def.']]).T
     time=df['Unnamed: 0_level_0']['team']

@@ -5,11 +5,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import os
-os.system('clear') 
+os.system('clear')
 
-jfla = ['Vas', 'Bra', 'Cor', 'Int', 'São']
-jint = ['AtlP', 'Spo', 'Vas', 'Fla', 'Cor']
-jatl = ['Goi', 'Flu', 'Bah', 'Spo', 'Pal']
+jfla = ['Cor', 'Int', 'São']
+jint = ['Vas', 'Fla', 'Cor']
+jsao = ['Grê', 'Pal', 'Bot','Fla']
 tabPorc = pd.DataFrame()
 tabPosicao = pd.DataFrame()
 
@@ -27,8 +27,8 @@ for ii in tqdm(range(1000)):
     empFla = 0
     vitInt = 0
     empInt = 0
-    vitAtl = 0
-    empAtl = 0
+    vitSao = 0
+    empSao = 0
 
     for i in range(len(jfla)):
         result = dd.fim(tabela, 'Fla', jfla[i])
@@ -40,32 +40,32 @@ for ii in tqdm(range(1000)):
         vitInt = vitInt+result[1]
         empInt = empInt+result[2]
 
-    for i in range(len(jatl)):
-        result = dd.fim(tabela, 'AtlM', jatl[i])
-        vitAtl = vitAtl+result[1]
-        empAtl = empAtl+result[2]
+    for i in range(len(jsao)):
+        result = dd.fim(tabela, 'São', jsao[i])
+        vitSao = vitSao+result[1]
+        empSao = empSao+result[2]
 
-    ptFla = 61+empFla+3*vitFla
-    ptInt = 65+empInt+3*vitInt
-    ptAtl = 60+empAtl+3*vitAtl
+    ptFla = 65+empFla+3*vitFla
+    ptInt = 66+empInt+3*vitInt
+    ptSao = 59+empSao+3*vitSao
 
-    if (ptFla > ptInt) and (ptFla > ptAtl):
+    if (ptFla >= ptInt) and (ptFla > ptSao):
         vf1 += 1
-    elif (ptFla < ptInt) and (ptFla < ptAtl):
+    elif (ptFla < ptInt) and (ptFla < ptSao):
         vf3 += 1
     else:
         vf2 += 1
 
-    if (ptInt > ptFla) and (ptInt > ptAtl):
+    if (ptInt > ptFla) and (ptInt > ptSao):
         vi1 += 1
-    elif (ptInt < ptFla) and (ptInt < ptAtl):
+    elif (ptInt < ptFla) and (ptInt < ptSao):
         vi3 += 1
     else:
         vi2 += 1
 
-    if (ptAtl > ptFla) and (ptAtl > ptInt):
+    if (ptSao > ptFla) and (ptSao > ptInt):
         va1 += 1
-    elif (ptAtl < ptFla) and (ptAtl < ptInt):
+    elif (ptSao < ptFla) and (ptSao < ptInt):
         va3 += 1
     else:
         va2 += 1
@@ -83,15 +83,15 @@ for ii in tqdm(range(1000)):
     porca3 = int(round(100*va3/(vf3+vi3+va3), 0))
 
     tabPorc = tabPorc.append(
-        {'Fla': porcf1, 'Int': porci1, 'Atl': porca1}, ignore_index=True)
+        {'Fla': porcf1, 'Int': porci1, 'Sao': porca1}, ignore_index=True)
 
     tabPosicao = tabPosicao.append({'Fla1': porcf1, 'Fla2': porcf2, 'Fla3': porcf3, 'Int1': porci1,
-                                    'Int2': porci2, 'Int3': porci3, 'Atl1': porca1, 'Atl2': porca2, 'Atl3': porca3}, ignore_index=True)
+                                    'Int2': porci2, 'Int3': porci3, 'Sao1': porca1, 'Sao2': porca2, 'Sao3': porca3}, ignore_index=True)
 
 
 print('Fla: ', porcf1, porcf2, porcf3)
 print('Int: ', porci1, porci2, porci3)
-print('Atl: ', porca1, porca2, porca3)
+print('São: ', porca1, porca2, porca3)
 
 plt.plot([porcf1, porcf2, porcf3], color='red')
 plt.plot([porci1, porci2, porci3], color='blue')
