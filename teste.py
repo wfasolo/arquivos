@@ -54,4 +54,3 @@ def ler():
     return {'dados': dados, 'intervalo': intervalo, 'hora': hora, 'estacao': station_df}
 
 
-

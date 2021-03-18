@@ -5,12 +5,12 @@ from sklearn.model_selection import train_test_split
 def dados(corrigir, chuva):
     previsao = corrigir['corrigido']
     previsao = previsao.drop(['hora'], axis=1)
-   
+
     X = chuva.drop(['Chuv'], axis=1)
     y = chuva['Chuv']
-    print(y)
+
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.1)
+        X, y, test_size=0.01,shuffle=True,stratify=y)
 
     scaler = StandardScaler()
     scaler.fit(X_train)

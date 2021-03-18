@@ -5,11 +5,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import os
-os.system('clear') 
+os.system('clear')
 
-jfla = ['Vas', 'Bra', 'Cor', 'Int', 'São']
-jint = ['AtlP', 'Spo', 'Vas', 'Fla', 'Cor']
-jatl = ['Goi', 'Flu', 'Bah', 'Spo', 'Pal']
+jfla = ['Cor', 'Int', 'São']
+jint = ['Vas', 'Fla', 'Cor']
+jatl = ['Bah', 'Spo', 'Pal']
 tabPorc = pd.DataFrame()
 tabPosicao = pd.DataFrame()
 
@@ -45,11 +45,11 @@ for ii in tqdm(range(1000)):
         vitAtl = vitAtl+result[1]
         empAtl = empAtl+result[2]
 
-    ptFla = 61+empFla+3*vitFla
-    ptInt = 65+empInt+3*vitInt
-    ptAtl = 60+empAtl+3*vitAtl
+    ptFla = 68+empFla+3*vitFla
+    ptInt = 67+empInt+3*vitInt
+    ptAtl = 61+empAtl+3*vitAtl
 
-    if (ptFla > ptInt) and (ptFla > ptAtl):
+    if (ptFla >= ptInt) and (ptFla >= ptAtl):
         vf1 += 1
     elif (ptFla < ptInt) and (ptFla < ptAtl):
         vf3 += 1

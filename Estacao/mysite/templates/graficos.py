@@ -3,6 +3,8 @@ import plotly.offline as py
 import plotly.graph_objs as go
 
 def graf(corrigido,SVCprev):
+    pres_min=corrigido['Pres'].min()
+
     '''
     plt.plot(corrigido['hora'], corrigido['Temp'])
     plt.xticks(rotation=90)
@@ -28,22 +30,29 @@ def graf(corrigido,SVCprev):
                     showlegend=False
                     )
     trace3= go.Scatter(x=corrigido['hora'],
-                    y=corrigido['Umid']*0.15,
+                    y=corrigido['Umid']*0.13,
                     text=corrigido['Umid'],
                     textposition='top center',
                     mode='lines+markers+text',
                     showlegend=False)
 
-    trace4 = go.Scatter(x=corrigido['hora'],
+    trace4= go.Scatter(x=corrigido['hora'],
+                    y=corrigido['Pres']-pres_min,
+                    text=corrigido['Pres'],
+                    textposition='top center',
+                    mode='lines+markers+text',
+                    showlegend=False)
+
+    trace5 = go.Scatter(x=corrigido['hora'],
                     y=SVCprev['previsao'][1]-3,
                     text=(SVCprev['previsao'][1]*100).round(0),
                     textposition='top center',
                     mode='lines+markers+text',
                     showlegend=True,
                     name='chuva')
-   
-   
-    data_temp = [trace, trace2,trace3,trace4]
+
+
+    data_temp = [trace, trace2,trace3,trace4,trace5]
     py.plot(data_temp)
 
 
