@@ -35,7 +35,7 @@ class Mega:
 
         (self.X_train, self.y_train) = (
             megafacil[:-1].values, megafacil[1:].values)
-        self.ultimo = self.y_train[-10:-5]
+        self.ultimo = self.y_train[-1:]
 
         return self.X_train, self.y_train, self.ultimo
 
