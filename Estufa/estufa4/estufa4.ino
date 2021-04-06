@@ -23,7 +23,9 @@ float kp = 20, ki = 5, kd = 1,
       integral = 0, derivada = 0,
       tempo = 0, tempo2 = 0,
       temp = 25, nova_temp = 26, final_temp = 25,
-      temp_ant = 0,
+      temp_ant = 0, minutos = 0,
+      temp_r1 = 40, temp_r2 = 50, temp_r3 = 60,
+      tempo_r1 = 20, tempo_r2 = 20, tempo_r3 = 20,
       setpoint = 25, pid = 0, erro = 0;
 
 int ck = 0;
@@ -45,6 +47,7 @@ void setup()
     out["P"] = p;
     out["I"] = i;
     out["D"] = d;
+    out["Tempo"] = minutos;
   };
 
   thing["PID"] << [](pson & in) {
@@ -63,7 +66,27 @@ void setup()
       kd = in["KD"];
     }
   };
-  thing.handle();
+  thing["RAMPA"] << [](pson & in) {
+    if (in.is_empty())
+    {
+      in["Temp_R1"] = temp_r1;
+      in["Temp_R2"] = temp_r2;
+      in["Temp_R3"] = temp_r3;
+      in["Tempo_R1"] = tempo_r1;
+      in["Tempo_R2"] = tempo_r2;
+      in["Tempo_R3"] = tempo_r3;
+    }
+    else
+    {
+      temp_r1 = in["Temp_R1"];
+      temp_r2 = in["Temp_R2"];
+      temp_r3 = in["Temp_R3"];
+      tempo_r1 = in["Tempo_R1"];
+      tempo_r2 = in["Tempo_R2"];
+      tempo_r3 = in["Tempo_R3"];
+    }
+  };
+
 }
 
 void loop()
@@ -75,8 +98,34 @@ void loop()
   {
     tempo2 = millis();
     medir();
+    rampa();
     checar();
   }
+}
+
+void rampa()
+{ minutos = (millis() - tempo3) / 60000;
+
+  if ( minutos <= tempo_r1)
+  {
+    setpoint = temp_r1;
+  }
+  //
+  if ( minutos > tempo_r1 && minutos <= (tempo1 + tempo_r2))
+  {
+    setpoint = temp_r2;
+  }
+  //
+  if ( minutos > (tempo1 + tempo_r2) && minutos <= (tempo1 + tempo_r2 + tempo_r3))
+  {
+    setpoint = temp_r3;
+  }
+  //
+  if ( minutos > (tempo1 + tempo_r2 + tempo_r3))
+  {
+    digitalWrite(saida, HIGH); //disligar//
+  }
+
 }
 
 //--- checar as restricoes ---//
