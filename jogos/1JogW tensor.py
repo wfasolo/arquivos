@@ -75,9 +75,10 @@ def vez(jogavez):
 
     if jogavez == 1:
         pos = int(input('Entre com uma casa: '))-1
+        # pos = random.randint(0, 8)
 
     elif jogavez == 2:
-        if len(jogadas) < 20:
+        if len(jogadas) < 6:
             pos = random.randint(0, 8)
         else:
             pos = IA()
@@ -272,6 +273,7 @@ def IA():
         model3 = Sequential()
         model3.add(Dense(125, input_shape=(len(ultimo),), activation="relu"))
         model3.add(Dense(75, activation="relu"))
+        model3.add(Dense(75, activation="relu"))
         model3.add(Dense(1, activation="relu"))
 
         optimizer = tf.keras.optimizers.RMSprop(0.001)
@@ -287,7 +289,7 @@ def IA():
     return int(round(predictions[0][0], 0))-1
 
 
-for cont in range(5):
+for cont in range(3):
     jogada = []
 
     p = pd.Series([[190, 185], [190, 285], [190, 385],
@@ -310,17 +312,17 @@ for cont in range(5):
         fim = final()
 
         if fim != 9:
-            arquivo = open(
-                '/home/casa/Documentos/arquivos/jogos/modelos/velhax.txt', 'w')
-            arquivo.write(str(jogadas))
-            arquivo.close()
+            # arquivo = open('/home/casa/Documentos/arquivos/jogos/modelos/velhax.txt', 'w')
+            np.savetxt(r'/home/casa/Documentos/arquivos/jogos/modelos/velhax.txt',
+                       jogadas, fmt='%d', delimiter='\t')
+
+            # arquivo.write(str(jogadas))
+            # arquivo.close()
             arquivo = open(
                 '/home/casa/Documentos/arquivos/jogos/modelos/velhay.txt', 'w')
             arquivo.write(json.dumps(jogacum))
             arquivo.close()
-            print(jogadas)
-            print(type(jogacum))
 
             break
 
-    time.sleep(5)
+    time.sleep(1)

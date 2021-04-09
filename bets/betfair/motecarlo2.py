@@ -51,7 +51,7 @@ print(prob1, empate, prob2)
 cs = 0
 ep = 0
 fr = 0
-for ii in range(1000):
+for ii in range(10000):
     propabilidade = []
     for i in range(3):
         rd = random.randrange(100)
@@ -83,6 +83,7 @@ print(gols)
 print(np.unravel_index(gols.argmax(), gols.shape))
 
 print(round(cs/ii*100,1), round(ep/ii*100,1), round(fr/ii*100,1))
+print(round(1/(cs/ii),1), round(1/(ep/ii),1), round(1/(fr/ii),1))
 
 
 
