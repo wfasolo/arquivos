@@ -1,27 +1,15 @@
-import re
-from bot import wppbot
+from chatterbot import ChatBot
+from chatterbot.trainers import ChatterBotCorpusTrainer
 
-bot = wppbot('robozin')
-bot.treina('treino')
-bot.inicia('Grupo dos Amigos')
-bot.saudacao(['Bot: Oi, sou o robozin!','Bot: Use :: no início para falar comigo'])
-ultimo_texto = ''
+chatbot = ChatBot('Ron Obvious')
 
+# Create a new trainer for the chatbot
+trainer = ChatterBotCorpusTrainer(chatbot)
 
+# Train the chatbot based on the english corpus
+trainer.train("chatterbot.corpus.Portuguese")
 
-while True:
+pergunta=input('frase: ')
 
-    texto = bot.escuta()
-
-    if texto != ultimo_texto and re.match(r'^::', texto):
-
-        ultimo_texto = texto
-        texto = texto.replace('::', '')
-        texto = texto.lower()
-
-        if (texto == 'aprender' or texto == ' aprender' or texto == 'ensinar' or texto == ' ensinar'):
-            bot.aprender(texto,'bot: Escreva a pergunta e após o ? a resposta.','bot: Obrigado por ensinar! Agora já sei!','bot: Você escreveu algo errado! Comece novamente..')
-        elif (texto == 'noticias' or texto == ' noticias' or texto == 'noticia' or texto == ' noticia' or texto == 'notícias' or texto == ' notícias' or texto == 'notícia' or texto == ' notícia'):
-            bot.noticias()
-        else:
-            bot.responde(texto)
+# Get a response to an input statement
+chatbot.get_response(pergunta)

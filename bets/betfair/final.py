@@ -7,9 +7,15 @@ from tqdm import tqdm
 import os
 os.system('clear')
 
+<<<<<<< HEAD
 jfla = ['Int', 'São']
 jint = ['Fla', 'Cor']
 jsao = ['Grê', 'Pal', 'Bot','Fla']
+=======
+jfla = ['Cor', 'Int', 'São']
+jint = ['Vas', 'Fla', 'Cor']
+jatl = ['Bah', 'Spo', 'Pal']
+>>>>>>> 8d6c52d103b749ebbc497a3c574a2c5e3815bb3b
 tabPorc = pd.DataFrame()
 tabPosicao = pd.DataFrame()
 
@@ -46,10 +52,17 @@ for ii in tqdm(range(1000)):
         empSao = empSao+result[2]
 
     ptFla = 68+empFla+3*vitFla
+<<<<<<< HEAD
     ptInt = 69+empInt+3*vitInt
     ptSao = 59+empSao+3*vitSao
 
     if (ptFla > ptInt) and (ptFla > ptSao):
+=======
+    ptInt = 67+empInt+3*vitInt
+    ptAtl = 61+empAtl+3*vitAtl
+
+    if (ptFla >= ptInt) and (ptFla >= ptAtl):
+>>>>>>> 8d6c52d103b749ebbc497a3c574a2c5e3815bb3b
         vf1 += 1
     elif (ptFla < ptInt) and (ptFla < ptSao):
         vf3 += 1

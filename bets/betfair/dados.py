@@ -48,7 +48,7 @@ def fim(tabela, perg1, perg2):
     fr = 0
     for ii in range(1):
         propabilidade = []
-        for i in range(5):
+        for i in range(3):
             rd = random.randrange(100)
 
             if rd < prob1:
