@@ -12,7 +12,6 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.jogador=1
         self.setGeometry(100, 100, 500, 500)
 
         self.widgetSvg = QSvgWidget(parent=self)
@@ -25,7 +24,7 @@ class MainWindow(QWidget):
 
     def paintEvent(self, event):
         self.game_over()
-        self.vez()
+        self.rand()
         self.tela_jog()
 
     def tela_jog(self):
@@ -45,23 +44,12 @@ class MainWindow(QWidget):
         first_move = move_list[which_move]  # Select move
         move_holder = chess.Move.from_uci(str(first_move))
 
-        
+        self.chessboard.push(move_holder)
         time.sleep(0.5)
-        return move_holder
 
-    def vez(self):
-
-        if self.jogador == 1:
-            self.chessboard.push(self.rand())
-            self.jogador = 2
-
-        elif self.jogador == 2:
-            jogada=input('jogada: ')
-            self.chessboard.push_san(jogada)
-            self.jogador = 1
 
 
 app = QApplication([])
 window = MainWindow()
 window.show()
-app.exec()
+sys.exit(app.exec())
