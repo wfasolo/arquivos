@@ -980,7 +980,7 @@ var LGPDPAULUS = (function (e) {
                                         (r = r || 0),
                                             /(^css!|\.css$)/.test(t)
                                                 ? (((s = u.createElement("link")).rel = "stylesheet"), (s.href = f), (i = "hideFocus" in s) && s.relList && ((i = 0), (s.rel = "preload"), (s.as = "style")))
-                                                : /(^img!|\.(png|gif|jpg|svg)$)/.test(t)
+                                                : /(^img!|\.(png|gif|jpygame|svg)$)/.test(t)
                                                 ? ((s = u.createElement("img")).src = f)
                                                 : (((s = u.createElement("script")).src = t), (s.async = void 0 === c || c)),
                                             (s.onload = s.onerror = s.onbeforeload = function (e) {
