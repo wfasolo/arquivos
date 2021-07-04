@@ -79,3 +79,11 @@ for cont in range(5):
             break
 
     time.sleep(5)
+
+
+#jogue 100 partida aparti de uma dedrminada pocição
+
+#Se xpartida=ypartida eliminea a ypartida
+
+#analise as partidas que tem os 3(Dpois de analisar, analise com nj-1,-1,-1,-1...) ultimo lance iguais vê qual é (Se vez=jogador 1, procure o melhor valor caso contrario escolha o menor)
+#(Se os resudados forem iguais escolha aleatorio)e depois nas proximas analises só conte a ultima jogada(que vai receber a pontuação da escolha na sua analise)

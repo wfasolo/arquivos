@@ -1,3 +1,5 @@
+#https://www.twilio.com/blog/play-chess-whatsapp-python-twilio
+
 import time
 import sys
 import random
@@ -12,7 +14,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.jogador=1
+        self.jogador = 1
         self.setGeometry(100, 100, 500, 500)
 
         self.widgetSvg = QSvgWidget(parent=self)
@@ -24,7 +26,7 @@ class MainWindow(QWidget):
         self.widgetSvg.load(self.chessboardSvg)
 
     def paintEvent(self, event):
-        self.game_over()
+        self.testes()
         self.vez()
         self.tela_jog()
 
@@ -32,7 +34,17 @@ class MainWindow(QWidget):
         self.chessboardSvg = chess.svg.board(self.chessboard).encode("UTF-8")
         self.widgetSvg.load(self.chessboardSvg)
 
-    def game_over(self):
+    def testes(self):
+        if self.chessboard.is_check() == True:
+            print("CHECK")
+            print(str(list(self.chessboard.legal_moves)))
+            self.tela_jog()
+            time.sleep(5)
+
+        if self.chessboard.is_checkmate() == True:
+            print("CHECK MATE")
+            time.sleep(5)
+
         if self.chessboard.is_game_over() == True:
             print(self.chessboard.outcome())
             input()
@@ -45,7 +57,6 @@ class MainWindow(QWidget):
         first_move = move_list[which_move]  # Select move
         move_holder = chess.Move.from_uci(str(first_move))
 
-        
         time.sleep(0.5)
         return move_holder
 
@@ -56,9 +67,13 @@ class MainWindow(QWidget):
             self.jogador = 2
 
         elif self.jogador == 2:
-            jogada=input('jogada: ')
-            self.chessboard.push_san(jogada)
-            self.jogador = 1
+            jogada = input('jogada: ')
+            print(jogada)
+            if chess.Move.from_uci(jogada) in self.chessboard.legal_moves:
+                self.chessboard.push_san(jogada)
+                self.jogador = 1
+            else:
+                print("Jogada Invalida...")
 
 
 app = QApplication([])

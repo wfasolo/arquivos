@@ -11,7 +11,7 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-jogador = 2
+jogador = 1
 j1 = pd.Series()
 j2 = pd.Series()
 jogadas = pd.DataFrame()
