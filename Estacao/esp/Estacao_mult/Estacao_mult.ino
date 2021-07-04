@@ -8,14 +8,11 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 
-
 ESP8266WiFiMulti multiWiFi;
 
 #define USERNAME "wfasolo"
 #define DEVICE_ID "Estacao"
 #define DEVICE_CREDENTIAL "@#lucas"
-
-
 
 WiFiUDP udp; //Cria um objeto "UDP"
 NTPClient ntp(udp, "a.st1.ntp.br", -3 * 3600, 60000);
@@ -26,12 +23,12 @@ unsigned long cont = 0,
               cont3 = 0,
               c_con = 0;
 
-float     pres = 0,
-          temp = 0,
-          umid = 0,
-          pres2 = 0,
-          temp2 = 0,
-          umid2 = 0;
+float pres = 0,
+      temp = 0,
+      umid = 0,
+      pres2 = 0,
+      temp2 = 0,
+      umid2 = 0;
 
 int chuv = 0,
     id = 1;
@@ -41,7 +38,8 @@ const int pinoSensor = D5;
 ThingerESP8266 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
 
 void setup()
-{ pinMode(LED_BUILTIN, OUTPUT);
+{
+  pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
   WiFi.mode(WIFI_STA);
   multiWiFi.addAP("FASOLO", "@@lucas@@");
@@ -53,7 +51,8 @@ void setup()
   //  thing.add_wifi(SSID, SSID_PASSWORD);
 
   // resource output example (i.e. reading a sensor value)
-  thing["parametros"] >> [](pson & out) {
+  thing["parametros"] >> [](pson &out)
+  {
     out["Chuv"] = chuv;
     out["Pres"] = pres;
     out["Temp"] = temp;
@@ -76,7 +75,8 @@ void loop()
 
     c_con++;
 
-    if (c_con >= 100) {
+    if (c_con >= 100)
+    {
       delay(2000);
       ESP.restart();
     }
@@ -104,14 +104,16 @@ void loop()
       //
 
       //chuva tempo real
-      if (id == 0 && chuv == 1) {
+      if (id == 0 && chuv == 1)
+      {
         thing.stream(thing["parametros"]);
         delay(100);
         yield();
 
         ler_chuva();
 
-        if (chuv == 1) {
+        if (chuv == 1)
+        {
           pres = pres2 / (cont3 * 100 * 0.99),
           temp = temp2 / cont3,
           umid = umid2 / (cont3 * 0.9);
@@ -171,26 +173,27 @@ void loop()
       //thing.stream(thing["Alt"]);
 
       cont = (millis() / 1000);
-
     }
     //
 
-
     thing.handle();
-
   }
 }
 
 // funcao ler chuva
-void ler_chuva() {
+void ler_chuva()
+{
 
   int sens_chuv = 0, i = 0, cc = 0;
 
-  for (i = 0; i <= 15; i++) {
-    if (digitalRead(pinoSensor) == HIGH) {
+  for (i = 0; i <= 15; i++)
+  {
+    if (digitalRead(pinoSensor) == HIGH)
+    {
       cc = 0;
     }
-    else {
+    else
+    {
       cc = 1;
     }
 
@@ -201,7 +204,7 @@ void ler_chuva() {
 
   sens_chuv = sens_chuv / i;
 
-  if ( sens_chuv < 1)
+  if (sens_chuv < 1)
   {
     chuv = 0;
     id = 0;
@@ -210,4 +213,4 @@ void ler_chuva() {
   {
     chuv = 1;
   }
-}//
+} //
