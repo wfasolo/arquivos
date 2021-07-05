@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 
 data = yf.download(  # or pdr.get_data_yahoo(...
         # tickers list or string as well
-        tickers = "PETR4.SA VALE",
+        tickers = ["PETR4.SA", "VALE3.SA"],
 
         # use "period" instead of start/end
         # valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max
@@ -14,7 +14,7 @@ data = yf.download(  # or pdr.get_data_yahoo(...
         # fetch data by interval (including intraday if period < 60 days)
         # valid intervals: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo
         # (optional, default is '1d')
-        interval = "15m",
+        interval = "5m",
 
         # group by ticker (to access via data['SPY'])
         # (optional, default is 'column')
@@ -37,8 +37,10 @@ data = yf.download(  # or pdr.get_data_yahoo(...
         proxy = None
     )
 
-df=pd.DataFrame(data.VALE)
+df=pd.DataFrame(data["PETR4.SA"])
+print(df)
 dd=pd.to_datetime((df.index).values, format="%Y-%d-%m %H:%M:%S")
+print(dd)
 dd=(dd.strftime('%H:%M'))
 # plotar o gráfico de candlestick
 trace1 = {
