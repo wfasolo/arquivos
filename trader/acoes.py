@@ -62,6 +62,9 @@ data = [trace1]
 layout = go.Layout()
 
 fig = go.Figure(data=data, layout=layout)
+<<<<<<< HEAD
+fig.show()
+=======
 #fig.show()
 
 
@@ -92,3 +95,4 @@ acur = metrics.accuracy_score(y_test, y_pred)
 
 previsao = model.predict_proba(prev_trans)
 
+>>>>>>> 32a77f14928902c247394d7b588c4e8af2e9efa1
