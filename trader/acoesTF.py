@@ -1,25 +1,30 @@
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
+
 import tensorflow as tf
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import SGD
+
 from sklearn import metrics
 import yfinance as yf
 import pandas as pd
+import numpy as np
 import plotly.graph_objects as go
 
 data = yf.download(  # or pdr.get_data_yahoo(...
     # tickers list or string as well
-    tickers="PETR4.SA VALE",
+    tickers="MGLU3.SA",
 
     # use "period" instead of start/end
     # valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max
     # (optional, default is '1mo')
-    period="1d",
+    period="1mo",
 
     # fetch data by interval (including intraday if period < 60 days)
     # valid intervals: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo
     # (optional, default is '1d')
-    interval="5m",
+    interval="1h",
 
     # group by ticker (to access via data['SPY'])
     # (optional, default is 'column')
@@ -42,7 +47,8 @@ data = yf.download(  # or pdr.get_data_yahoo(...
     proxy=None
 )
 
-df = pd.DataFrame(data.VALE)
+df = pd.DataFrame(data)
+df=df.dropna()
 dd = pd.to_datetime((df.index).values, format="%Y-%d-%m %H:%M:%S")
 dd = (dd.strftime('%H%M'))
 # plotar o gráfico de candlestick
@@ -62,33 +68,34 @@ data = [trace1]
 layout = go.Layout()
 
 fig = go.Figure(data=data, layout=layout)
-#fig.show()
+# fig.show()
 
 
+y = df.Open
+X = pd.DataFrame(dd).astype(int)
 
-y = df.drop(['Volume'], axis=1)
-X = pd.DataFrame(dd)
-print(y)
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.01, shuffle=True)
 
-scaler = StandardScaler()
-scaler.fit(X_train)
-X_train = scaler.transform(X_train)
-X_test = scaler.transform(X_test)
-prev_trans = scaler.transform(y)
 
 
+model3 = Sequential()
+model3.add(Dense(1, input_shape=(1,)))
+model3.add(Dense(250, activation="softmax"))
+model3.add(Dense(200, activation="relu"))
+model3.add(Dense(100, activation="elu"))
 
-# Tainar modelo
-model = RandomForestClassifier(n_estimators=1, n_jobs=-1)
-model.fit(X_train, y_train)
 
-# Fazer previsoes
-y_pred = model.predict(X_test)
+model3.add(Dense(1))
 
-acur = metrics.accuracy_score(y_test, y_pred)
+optimizer = tf.keras.optimizers.RMSprop(0.001)
 
-previsao = model.predict_proba(prev_trans)
+model3.compile(loss='MSE', optimizer='adam', metrics=['mse'])
 
+model3.fit(X.values, y.values, batch_size=128, epochs=300, verbose=0)
+
+predictions = model3.predict([1000,1100,1200,1300,1400,1500,1600])
+
+print(y)
+print(predictions)
