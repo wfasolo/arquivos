@@ -23,13 +23,13 @@ Adafruit_BME280 bme;
 
 unsigned long cont = 0, cont1 = 0, c_con = 0, cont_BD = 0;
 
-float     pres = 1015.0f, temp = 25.0f, umid = 50.0f,
-          pres1 = 1015.0f, temp1 = 25.0f, umid1 = 50.0f,
-          pres2 = 1015.0f, temp2 = 25.0f, umid2 = 50.0f,
-          pres3 = 1015.0f, temp3 = 25.0f, umid3 = 50.0f,
-          presBD = 0.0f, tempBD = 0.0f, umidBD = 0.0f;
+float     pres = 0, temp = 0, umid = 0,
+          pres1 = 0, temp1 = 0, umid1 = 0,
+          pres2 = 0, temp2 = 0, umid2 = 0,
+          pres3 = 0, temp3 = 0, umid3 = 0,
+          presBD = 0, tempBD = 0, umidBD = 0;
 
-int chuv = 0, id = 1, inicio = 0,
+int chuv = 0, id = 1,
     hora = 61, minuto = 61, segundo = 61;
 
 const int pinoSensor = D5;
@@ -42,12 +42,16 @@ void setup()
   digitalWrite(LED_BUILTIN, HIGH);
   WiFi.mode(WIFI_STA);
   multiWiFi.addAP("FASOLO", "@@lucas@@");
-  //multiWiFi.addAP("BGF", "@giagra@");
+  multiWiFi.addAP("BGF", "@giagra@");
   multiWiFi.addAP("LAB", "@@lucas@@");
   multiWiFi.addAP("a1", "@1234567@");
   pinMode(pinoSensor, INPUT);
   ntp.begin();
   bme.begin(0x76);
+  ler_clima();
+  pres3 = pres2 = pres1 = pres;
+  temp3 = temp2 = temp1 = temp;
+  umid3 = umid2 = umid1 = umid;
 
   // resource output example (i.e. reading a sensor value)
   thing["parametros"] >> [](pson & out) {
@@ -57,12 +61,6 @@ void setup()
     out["Umid"] = umid;
   };
   //thing["Alt"] >> outputValue(bme.readAltitude(PressaoaNivelDoMar_HPA));
-  pres = bme.readPressure() / 99.0f;
-  temp = bme.readTemperature();
-  umid = bme.readHumidity();
-  pres3 = pres2 = pres1 = pres;
-  temp3 = temp2 = temp1 = temp;
-  umid3 = umid2 = umid1 = umid;
 }
 
 void loop()
@@ -206,19 +204,16 @@ void ler_clima()
 
   for (ii = 0; ii <= 15; ii++)
   {
-    pres += bme.readPressure() / 99.0f;
+    pres += bme.readPressure() / 99;
     temp += bme.readTemperature();
     umid += bme.readHumidity();
     delay(5);
   }
   yield();
-  pres = (pres / (ii + 1));
-  temp = (temp / (ii + 1));
-  umid = (umid / (ii + 1));
 
-  pres = (pres + pres1 + pres2 + pres3) / 4.0;
-  temp = (temp + temp1 + temp2 + temp3) / 4.0;
-  umid = (umid + umid1 + umid2 + umid3) / 4.0;
+  pres = ((pres / ii) + pres1 + pres2 + pres3) / 4;
+  temp = ((temp / ii) + temp1 + temp2 + temp3) / 4;
+  umid = ((umid / ii) + umid1 + umid2 + umid3) / 4;
 
   presBD += pres;
   tempBD += temp;
