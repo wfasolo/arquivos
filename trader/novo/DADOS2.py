@@ -57,8 +57,4 @@ def TAB():
         tabela.Open.astype(int), tabela.Close.astype(int))
     tabela.High, tabela.Low = (tabela.High.astype(int), tabela.Low.astype(int))
 
-    X = tabela.drop(['Data', 'Hora'], axis=1)
-    (X_train, y_train) = (X[:-1].values, X[1:].values)
-    ultimo = y_train[-1:]
-
-    return {'tabela': tabela, 'X_train': X_train, 'y_train': y_train, 'ultimo': ultimo}
+    return {'tabela': tabela}

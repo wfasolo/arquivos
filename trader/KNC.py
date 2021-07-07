@@ -14,7 +14,7 @@ model1.fit(dados['X_train'],dados['y_train'])
 previsao2 = []
 previsao = model1.predict(dados['ultimo'])
 previsao2.extend(previsao/1000)
-for i in range(0):
+for i in range(5):
     previsao = model1.predict(previsao)
     previsao2.extend(previsao/1000)
 
