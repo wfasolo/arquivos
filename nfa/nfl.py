@@ -1,0 +1,10 @@
+distancia=1.756*4
+eloa=1565+55+distancia
+elob=1615
+pa=(1/(10**((eloa-elob)/400)+1))*1000
+pb=(1/(10**((elob-eloa)/400)+1))*1000
+pa=int(pa)/10
+pb=int(pb)/10
+pe=(100-(pa+pb))*100
+pe=int(pe)/10
+print(pb,pa,pe)
