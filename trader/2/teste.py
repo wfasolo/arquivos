@@ -35,7 +35,7 @@ while volta != tamanho-3:
 
 tabela_x = pd.DataFrame(tab_x, columns=['x1', 'x2', 'x3'])
 tabela_x['y1'] = tab_y
-
+print (tabela_x)
 
 trace1 = {
     'x': pd.to_datetime((dados['date']*1000000000)-3600000000000*3),

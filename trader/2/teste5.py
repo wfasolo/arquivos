@@ -22,10 +22,11 @@ dados = dados['results'][0]['historicalDataPrice']
 dados = pd.json_normalize(dados)
 dados = dados.dropna()
 dados_limpo = dados.drop(['volume', 'date'], axis=1)
-dados_limpo=pd.DataFrame([dados_limpo['open'],dados_limpo['close'],dados_limpo['high'],dados_limpo['low']]).T
+dados_limpo = pd.DataFrame(
+    [dados_limpo['open'], dados_limpo['close'], dados_limpo['high'], dados_limpo['low']]).T
 
 
-#print(pd.to_datetime((dados['date']*1000000000)-3600000000000*3))
+# print(pd.to_datetime((dados['date']*1000000000)-3600000000000*3))
 
 tabela = dados_limpo.values
 tab_x = []
@@ -42,8 +43,8 @@ while volta != tamanho-3:
     tab_y.extend([tabela[ii+1]])
     tab_x.extend([tab2])
 
-tabelax1=pd.DataFrame(tab_x)
-tabelay1=pd.DataFrame(tab_y)
+tabelax1 = pd.DataFrame(tab_x)
+tabelay1 = pd.DataFrame(tab_y)
 ####################
 ######################
 url = "https://brapi.ga/api/quote/PETR4?interval=1d&range=10y"
@@ -54,10 +55,11 @@ dados = dados['results'][0]['historicalDataPrice']
 dados = pd.json_normalize(dados)
 dados = dados.dropna()
 dados_limpo = dados.drop(['volume', 'date'], axis=1)
-dados_limpo=pd.DataFrame([dados_limpo['open'],dados_limpo['close'],dados_limpo['high'],dados_limpo['low']]).T
+dados_limpo = pd.DataFrame(
+    [dados_limpo['open'], dados_limpo['close'], dados_limpo['high'], dados_limpo['low']]).T
 
 
-#print(pd.to_datetime((dados['date']*1000000000)-3600000000000*3))
+# print(pd.to_datetime((dados['date']*1000000000)-3600000000000*3))
 
 tabela = dados_limpo.values
 tab_x = []
@@ -74,12 +76,12 @@ while volta != tamanho-3:
     tab_y.extend([tabela[ii+1]])
     tab_x.extend([tab2])
 
-tabelax2=pd.DataFrame(tab_x)
-tabelay2=pd.DataFrame(tab_y)
+tabelax2 = pd.DataFrame(tab_x)
+tabelay2 = pd.DataFrame(tab_y)
 ####################
 
-tabelax=pd.concat([tabelax1,tabelax2])
-tabelay=pd.concat([tabelay1,tabelay2])
+tabelax = pd.concat([tabelax1, tabelax2])
+tabelay = pd.concat([tabelay1, tabelay2])
 
 X_train, X_test, y_train, y_test = train_test_split(
     tabelax.values, tabelay.values, test_size=0.5)
@@ -105,21 +107,19 @@ optimizer = tf.keras.optimizers.RMSprop(0.001)
 model3.compile(loss='MSE', optimizer='adam', metrics=['mse'])
 
 
-model3.fit(X_train, y_train, batch_size=128, epochs=1000, verbose=1,validation_data=(X_test,y_test))
-
-
+model3.fit(X_train, y_train, batch_size=128, epochs=15,
+           verbose=2, validation_data=(X_test, y_test))
 
 
 # Fazer previsoes
 y_pred = model3.predict(X_test)
 
-t_y_pred=pd.DataFrame(y_pred)
+t_y_pred = pd.DataFrame(y_pred)
 print(t_y_pred)
 
 
-t_y_test=pd.DataFrame(y_test)
+t_y_test = pd.DataFrame(y_test)
 print(t_y_test)
-
 
 
 # Fazer previsoes
@@ -127,6 +127,5 @@ previsao = model3.predict(ultimo)
 
 print(pd.DataFrame(previsao))
 print(pd.DataFrame(tab_y[-1:]))
-
 
 
