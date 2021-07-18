@@ -1,5 +1,16 @@
+# https://www.deeplearningbook.com.br/reconhecimento-de-imagens-com-redes-neurais-convolucionais-em-python-parte-4/
+
+from sklearn.model_selection import train_test_split
+
+
 import pandas as pd
 import requests
+
+import tensorflow as tf
+from tensorflow.keras import layers, Sequential
+from tensorflow.keras.layers import Dense
+
+#####
 
 tabelax = tabelay = pd.DataFrame()
 
@@ -43,3 +54,54 @@ for i in range(len(empresa)):
 ####################
     tabelax = pd.concat([tabelax, tabelax1], ignore_index=True)
     tabelay = pd.concat([tabelay, tabelay1], ignore_index=True)
+
+
+#####
+
+
+X_train, X_test, y_train, y_test = train_test_split(
+    tabelax.values, tabelay.values, test_size=0.1)
+
+
+ultimo = tab_x[-1:]
+
+#X_train = np.asarray(pd.DataFrame(X_train).astype(np.float32))
+
+model3 = Sequential()
+
+
+model3.add(layers.Flatten())
+model3.add(layers.Dense(256, kernel_initializer="random_uniform",
+           bias_initializer="random_uniform"))
+model3.add(Dense(128,activation="relu"))
+model3.add(Dense(64, activation="elu"))
+model3.add(Dense(32))
+model3.add(Dense(16))
+
+model3.add(Dense(4))
+
+callback = tf.keras.callbacks.EarlyStopping(monitor='loss', min_delta=0.01)
+
+model3.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
+
+
+model3.fit(X_train, y_train, batch_size=100, epochs=100,
+           verbose=2, validation_data=(X_test, y_test), callbacks=[callback])
+
+
+# Fazer previsoes
+y_pred = model3.predict(X_test)
+
+t_y_pred = pd.DataFrame(y_pred)
+print(t_y_pred)
+
+
+t_y_test = pd.DataFrame(y_test)
+print(t_y_test)
+
+
+# Fazer previsoes
+previsao = model3.predict(ultimo)
+
+print(pd.DataFrame(previsao))
+print(pd.DataFrame(tab_y[-1:]))
