@@ -1,19 +1,14 @@
 # https://www.deeplearningbook.com.br/reconhecimento-de-imagens-com-redes-neurais-convolucionais-em-python-parte-4/
-from numpy.core.defchararray import mod
-from pandas.core.series import Series
-from sklearn import metrics
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.preprocessing import MinMaxScaler
+
 from sklearn.model_selection import train_test_split
-import plotly.graph_objects as go
-import numpy as np
+
+
 import pandas as pd
 import requests
 
 import tensorflow as tf
 from tensorflow.keras import layers, Sequential
 from tensorflow.keras.layers import Dense
-
 
 
 ######################
@@ -153,7 +148,7 @@ tabelax = pd.concat([tabelax1, tabelax2, tabelax3, tabelax4])
 tabelay = pd.concat([tabelay1, tabelay2, tabelay3, tabelay4])
 
 X_train, X_test, y_train, y_test = train_test_split(
-    tabelax.values, tabelay.values, test_size=0.3)
+    tabelax.values, tabelay.values, test_size=0.1)
 
 
 ultimo = tab_x[-1:]
@@ -165,20 +160,21 @@ model3 = Sequential()
 
 model3.add(layers.Flatten())
 model3.add(layers.Dense(256, kernel_initializer="random_uniform",
-           bias_initializer="random_uniform", activation="softmax"))
-model3.add(Dense(128, activation="exponential"))
-model3.add(Dense(64, activation="softplus"))
-model3.add(Dense(32, activation="softsign"))
-model3.add(Dense(16, activation="selu"))
+           bias_initializer="random_uniform"))
+model3.add(Dense(128,activation="relu"))
+model3.add(Dense(64, activation="elu"))
+model3.add(Dense(32))
+model3.add(Dense(16))
 
-model3.add(Dense(4, ))
+model3.add(Dense(4))
+
+callback = tf.keras.callbacks.EarlyStopping(monitor='loss', min_delta=0.01)
+
+model3.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 
 
-model3.compile(loss='MSE', optimizer='adam', metrics=['accuracy'])
-
-
-model3.fit(X_train, y_train, batch_size=100, epochs=1000,
-           verbose=2, validation_data=(X_test, y_test))
+model3.fit(X_train, y_train, batch_size=100, epochs=100,
+           verbose=2, validation_data=(X_test, y_test), callbacks=[callback])
 
 
 # Fazer previsoes
