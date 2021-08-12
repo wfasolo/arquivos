@@ -1,0 +1,45 @@
+#container{
+    width: 80%;
+    padding: 15px;
+    background-color: #ccc;
+    overflow: auto;
+}
+#container div{
+width: 80px;
+height: 50px;
+border: 2px solid red;
+margin: 5px;
+
+}
+#div1{
+    float: left;
+}
+#div2{
+float: left;
+}
+#div3{
+
+    float: left;
+}
+header{
+    background-color: #ccc;
+    height: 50px;
+}
+nav{
+    width: 25%;
+    height: 50px;
+    background-color: orange;
+    float: left;
+
+}
+main{
+    width: 70%;
+    height: 100px;
+    background-color: yellow;
+    float: right;
+}
+footer{
+    height: 50px;
+    background-color: blue;
+    clear: both;
+}

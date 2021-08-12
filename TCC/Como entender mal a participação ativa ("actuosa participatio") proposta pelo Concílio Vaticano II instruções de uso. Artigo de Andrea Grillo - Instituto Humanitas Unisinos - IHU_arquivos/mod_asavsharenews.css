@@ -1,0 +1,23 @@
+.news-sharebuttons {display: inline-block;}
+.news-sharebuttons ul, .news-language ul {list-style: none;padding-left: 0;}
+.news-sharebuttons ul li, .news-language ul li {display: inline-block;margin-right: 5px;}
+.news-sharebuttons ul li a {color: #333;font-size: 20px;}
+.news-sharebuttons ul li a:hover {color: #FC6B01;}
+@media (min-width:992px) {.news-mobile-share {display: inline-block !important;}.button-news-mobile-share {display: none;}}
+@media (min-width:768px) and (max-width:991px) {
+    .news-mobile-share {display: inline-block !important;}
+    .button-news-mobile-share {display: none;}
+}
+@media (max-width:767px) {
+    .news-mobile-share {display: none;width: 100%;background-color: #FFF;position: fixed;top:0;left:0;height: 100%;z-index: 300;font-family: "Lato",sans-serif;}
+    .news-mobile-share .news-sharebuttons {width: 80%;margin: 0 auto;display: block;}
+    .news-mobile-share h3 {width: 100%;color: #AAA;padding: 20px 0 40px;}
+    .news-mobile-share .news-sharebuttons li {border: 1px solid #ccc;border-radius: 5px;margin: 5px 0;padding: 10px 0;text-align: center;width: 100%;}
+    .news-mobile-share .news-sharebuttons li a {text-decoration: none;display: block;}
+    .news-mobile-share .news-sharebuttons li a > i {width: 45px;}
+    .news-mobile-share .news-sharebuttons li a > h4 {display: inline-block;font-weight: normal;}
+    .news-mobile-share .mobile-sharebutton-cancel {bottom: 0;cursor: pointer;display: inline-block;line-height: normal;margin: 50px 0;position: absolute;color: #AAA;}
+    .button-news-mobile-share {padding: 5px;border-radius: 5px;border: 1px solid #CCC;display: inline-block;line-height: normal;cursor: pointer;margin-bottom: 15px;}
+    .button-news-mobile-share:hover {opacity: 0.6;}
+    .button-news-mobile-share i, .mobile-sharebutton-cancel i {vertical-align: middle;}
+}
