@@ -29,6 +29,7 @@ def f_url(ticker):
         dados = dados['results'][0]['historicalDataPrice']
         dados = pd.json_normalize(dados)
         dados = dados.dropna()
+        print(dados['volume'][-2:-1].values)
 
     except:
         dados = [[0]]
@@ -51,13 +52,10 @@ def tab(dados):
         anterior_o = dados_ant['open'][-1:]
         cor = atual_c.values/atual_o.values
         movel = dados['close'].rolling(21).mean()
-        
 
         if atual_o.empty == False and \
-                atual_o.values >= anterior_c.values and \
-                atual_o.values >= anterior_o.values and \
-                atual_o.values >= [media20] and\
-                atual_o.values >= [media200] and cor[0] >= [1.003]:
+                dados['volume'][-2:-1].values >= [1000] and\
+                cor[0] >= [1.003]:
 
             print(ticker, ' ', cor)
             tabela = pd.concat(
@@ -66,7 +64,7 @@ def tab(dados):
             movel = movel[-len(tabela):]
             mavdf = pd.DataFrame(
                 dict(aber=atual_o.values, m20=media20, m200=media200), index=tabela.index)
-            mavdf['movel']=movel.values
+            mavdf['movel'] = movel.values
             grafico(tabela, mavdf)
 
         return atual_o
@@ -84,7 +82,7 @@ def grafico(tabela, mavdf):
         title='Empresa: '+ticker,
         ylabel='Price ($)',
         addplot=ap,
-        #mav=(11),
+        # mav=(11),
         vlines=data_atual
     )
 
