@@ -17,7 +17,7 @@ resp = requests.request("GET", url)
 
 stocks = pd.DataFrame(resp.json())
 empresa = np.array(stocks['stocks'])
-empresa=['petr4']
+empresa=['petr4','vale3','ITSA4','EMBR3']
 
 for i in tqdm(range(len(empresa))):
     ticker = empresa[i]
@@ -33,6 +33,8 @@ for i in tqdm(range(len(empresa))):
         dados = dados['results'][0]['historicalDataPrice']
         dados = pd.json_normalize(dados)
         dados = dados.dropna()
+        dados=dados/dados['open'].median()
+
     except :
         dados=[[0]]
         print("erro")
@@ -40,7 +42,7 @@ for i in tqdm(range(len(empresa))):
     if len(dados) >= 10:
         dados_limpo = pd.DataFrame(
             [dados['open'], dados['close'], dados['high'], dados['low']]).T
-        dados_limpo=(round(dados_limpo,3))
+        
 
         # print(pd.to_datetime((dados['date']*1000000000)-3600000000000*3))
 

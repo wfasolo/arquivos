@@ -55,12 +55,12 @@ def prever(ultimo, modelo,bloco):
 
 # KNR
 ultimo = valor[0]
-modelo = pickle.load(open('Trader2/Tabelas/knr.sav', 'rb'))
+modelo = pickle.load(open('Tabelas/knr.sav', 'rb'))
 prever(ultimo, modelo,False)
 
 # Tensor
 ultimo = valor[0]
-modelo = models.load_model('Trader2/Tabelas')
+modelo = models.load_model('Tabelas')
 prever(ultimo, modelo,True)
 
 #GRAF.graf(valor)

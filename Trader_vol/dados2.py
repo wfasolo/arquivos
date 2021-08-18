@@ -13,10 +13,7 @@ def ret(ticker, per, inter):
     dados = dados['results'][0]['historicalDataPrice']
     dados = pd.json_normalize(dados)
     dados = dados.dropna()
-    dat=dados['date']
-    dados=dados/dados['open'].median()
-    dados['date']=dat
-    
+    dados=(round(dados,3))
 
     if ((dados['open'][-1:].values == dados['close'][-1:].values) and
             (dados['high'][-1:].values == dados['low'][-1:].values)):
@@ -33,5 +30,6 @@ def ret(ticker, per, inter):
 
     valor = pd.DataFrame(tab_x).T
 
+    #valor = valor/valor[0][0]
     print (valor)
     return (valor, dados)

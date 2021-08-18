@@ -18,13 +18,11 @@ modelo.add(layers.Flatten())
 modelo.add(layers.Dense(256, kernel_initializer="random_uniform",
            bias_initializer="random_uniform"))
 modelo.add(Dense(128, activation="relu"))
-
-modelo.add(Dense(64, activation="selu"))
-
-modelo.add(Dense(32, activation="softmax"))
 modelo.add(layers.Dropout(0.2))
+modelo.add(Dense(64, activation="elu"))
+modelo.add(Dense(32, activation="softmax"))
 modelo.add(Dense(16))
-modelo.add(Dense(12))
+modelo.add(Dense(15))
 
 callback = tf.keras.callbacks.EarlyStopping(monitor='loss', min_delta=0.01)
 opt = tf.keras.optimizers.RMSprop(learning_rate=0.00001)

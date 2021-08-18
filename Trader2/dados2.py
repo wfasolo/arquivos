@@ -13,6 +13,7 @@ def ret(ticker, per, inter):
     dados = dados['results'][0]['historicalDataPrice']
     dados = pd.json_normalize(dados)
     dados = dados.dropna()
+    dados=dados/dados['open'].max()
 
     if ((dados['open'][-1:].values == dados['close'][-1:].values) and
             (dados['high'][-1:].values == dados['low'][-1:].values)):

@@ -10,7 +10,7 @@ dados = PREPRO.preparar()  # X_train, X_test, y_train, y_test, tabelax, tabelay
 # KNR
 modelo = KNeighborsRegressor(n_neighbors=3)
 modelo.fit(dados[0], dados[2])
-pickle.dump(modelo, open('Trader/Tabelas/knr.sav', 'wb'))
+pickle.dump(modelo, open('Tabelas/knr.sav', 'wb'))
 
 # TENSOR
 modelo = Sequential()
@@ -30,5 +30,5 @@ modelo.compile(loss='MAE', optimizer=opt, metrics=['accuracy'])
 modelo.fit(dados[0], dados[2], batch_size=64, epochs=100,
            verbose=2, validation_data=(dados[1], dados[3]))
 
-modelo.save('Trader/Tabelas')
+modelo.save('Tabelas')
 

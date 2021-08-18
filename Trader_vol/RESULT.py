@@ -57,7 +57,7 @@ def prever(ultimo, modelo, bloco):
     frame = pd.DataFrame(tt.values, columns=['Open', 'Close', 'High', 'Low'])
     frame = frame.set_index(data[0])
     frame.index = pd.to_datetime(frame.index-10800, unit='s')
-   
+    frame = (round(frame, 2))
     print(frame)
 
     fplt.plot(
