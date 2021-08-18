@@ -4,8 +4,8 @@ import pandas as pd
 
 def preparar():
 
-    tabelax = pd.read_pickle('Trader/Tabelas/tabelax')
-    tabelay = pd.read_pickle('Trader/Tabelas/tabelay')
+    tabelax = pd.read_pickle('Tabelas/tabelax')
+    tabelay = pd.read_pickle('Tabelas/tabelay')
     ###
     X_train, X_test, y_train, y_test = train_test_split(
         tabelax.values, tabelay.values, test_size=0.1)
