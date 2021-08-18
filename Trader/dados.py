@@ -17,6 +17,7 @@ resp = requests.request("GET", url)
 
 stocks = pd.DataFrame(resp.json())
 empresa = np.array(stocks['stocks'])
+empresa=['petr4']
 
 for i in tqdm(range(len(empresa))):
     ticker = empresa[i]
@@ -37,9 +38,8 @@ for i in tqdm(range(len(empresa))):
         print("erro")
         
     if len(dados) >= 10:
-        dados_limpo = dados.drop(['volume', 'date'], axis=1)
         dados_limpo = pd.DataFrame(
-            [dados_limpo['open'], dados_limpo['close'], dados_limpo['high'], dados_limpo['low']]).T
+            [dados['open'], dados['close'], dados['high'], dados['low']]).T
         dados_limpo=(round(dados_limpo,3))
 
         # print(pd.to_datetime((dados['date']*1000000000)-3600000000000*3))
@@ -74,8 +74,8 @@ if normal == 'S' or normal == 's':
         tabelax.iloc[i] = (tabelax.iloc[i]/tabelax.iloc[i, 0])
         tabelay.iloc[i] = (tabelay.iloc[i]/tabelay.loc[i, 0])
 
-tabelax.to_pickle('Trader/Tabelas/tabelax')
-tabelay.to_pickle('Trader/Tabelas/tabelay')
+tabelax.to_pickle('Tabelas/tabelax')
+tabelay.to_pickle('Tabelas/tabelay')
 print(len(tabelay))
 print(tabelax)
 print(tabelay)
