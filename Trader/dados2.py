@@ -14,7 +14,7 @@ def ret(ticker, per, inter):
     dados = pd.json_normalize(dados)
     dados = dados.dropna()
     dat=dados['date']
-    dados=dados/dados['open'].median()
+    #dados=dados/dados['open'].median()
     dados['date']=dat
     
 
@@ -22,9 +22,9 @@ def ret(ticker, per, inter):
             (dados['high'][-1:].values == dados['low'][-1:].values)):
         dados = dados[:-1]
 
-    dados = dados.drop(['volume'], axis=1)
+
     dados_limpo = pd.DataFrame(
-        [dados['open'], dados['close'], dados['high'], dados['low']]).T
+        [dados['open'], dados['close'], dados['high'], dados['low'], dados['volume']]).T
     
     tab = dados_limpo.values
 

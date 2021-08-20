@@ -9,6 +9,8 @@ ticker = input("Empresa: ") or "PETR4"
 per = input("Periodo '1d': ") or "1d"
 inter = input("Intervalo '15m': ") or "15m"
 
+if inter == "5m":
+    tp = 300
 if inter == "15m":
     tp = 900
 if inter == "30m":
