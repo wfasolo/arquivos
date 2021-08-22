@@ -1,7 +1,9 @@
+#https://www.tensorflow.org/guide/keras/train_and_evaluate
 from tensorflow.keras.layers import Dense
 from tensorflow.keras import layers, Sequential
 import tensorflow as tf
 from sklearn.neighbors import KNeighborsRegressor
+
 import pickle
 import PREPRO
 
@@ -15,22 +17,24 @@ pickle.dump(modelo, open('Tabelas/knr.sav', 'wb'))
 # TENSOR
 modelo = Sequential()
 modelo.add(layers.Flatten())
-modelo.add(layers.Dense(256, kernel_initializer="random_uniform",
+modelo.add(layers.Dense(1, kernel_initializer="random_uniform",
            bias_initializer="random_uniform"))
-modelo.add(Dense(28, activation="elu"))
-modelo.add(Dense(64, activation="relu"))
-modelo.add(Dense(32, activation="selu"))
+
 modelo.add(layers.Dropout(0.2))
-modelo.add(Dense(16))
-modelo.add(Dense(5))
 
-callback = tf.keras.callbacks.EarlyStopping(monitor='loss', min_delta=0.01)
-opt = tf.keras.optimizers.RMSprop(learning_rate=0.00001)
+modelo.add(Dense(5,activation=layers.LeakyReLU(alpha=0.1)
+))
+modelo.add(layers.Dropout(0.1))
 
-modelo.compile(loss='MSLE', optimizer="Nadam", metrics=['accuracy'])
 
-modelo.fit(dados[0], dados[2], batch_size=64, epochs=500,
-           verbose=2, validation_data=(dados[1], dados[3]))
+callback = tf.keras.callbacks.EarlyStopping(
+    monitor='loss', patience=10, mode='auto')
+
+modelo.compile(loss='MSLE', optimizer='Nadam', metrics=['accuracy'])
+
+modelo.fit(dados[0], dados[2], batch_size=64, epochs=100,
+                  verbose=2, validation_data=(dados[1], dados[3]))
+
+
 
 modelo.save('Tabelas')
-

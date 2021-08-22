@@ -2,6 +2,7 @@
 import pandas as pd
 import requests
 import time
+import os
 
 per = input("Periodo '15d': ") or "15d"
 inter = input("Intervalo '1d': ") or "1d"
@@ -26,11 +27,22 @@ def ler_ticker(ii):
 
 
 def ler_json(tickers):
+    erro = 0
+    while erro != 3:
+        try:
 
-    url = "https://brapi.ga/api/quote/"+tickers+"?interval="+inter+"&range="+per
-    resp = requests.get(url, timeout=50000)
-    tabela = pd.DataFrame(resp.json())
-    time.sleep(3)
+            url = "https://brapi.ga/api/quote/"+tickers+"?interval="+inter+"&range="+per
+            resp = requests.get(url, timeout=50000)
+            tabela = pd.DataFrame(resp.json())
+            time.sleep(3)
+            erro = 3
+
+        except:
+            erro += 1
+            print(erro, ' ', os.error)
+            time.sleep(2)
+            os.system('clear')
+
     return tabela
 
 
