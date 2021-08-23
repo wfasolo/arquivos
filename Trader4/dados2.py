@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+import teste
 
 tabelax = pd.DataFrame()
 tab_x = []
@@ -14,19 +15,13 @@ def ret(ticker, per, inter):
     dados = pd.json_normalize(dados)
     dados=dados[:-1]
     dados = dados.dropna()
-    dat = dados['date']
-    # dados=dados/dados['open'].median()
-    dados['date'] = dat
-    dados['volume'] = dados['volume']/1e7
-
-    if ((dados['open'][-1:].values == dados['close'][-1:].values) and
-            (dados['high'][-1:].values == dados['low'][-1:].values)):
-        dados = dados[:-1]
+    dadost=teste.converter(dados)
 
     dados_limpo = pd.DataFrame(
-        [dados['open'], dados['high'], dados['low'], dados['close'], dados['volume']]).T
+            [dadost['cor'], dadost['corpo'],dadost['dist']]).T
 
     tab = dados_limpo.values
+    print(dados_limpo)
 
     for i in range(len(tab)-5, len(tab)):
         tab_x.extend(tab[i])

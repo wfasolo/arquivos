@@ -24,9 +24,9 @@ modelo.add(layers.Dropout(0.2))
 modelo.add(Dense(15, activation='relu'))
 modelo.add(Dense(12, activation='selu'))
 modelo.add(layers.Dropout(0.1))
-modelo.add(Dense(6, activation=layers.LeakyReLU(alpha=0.1)))
-modelo.add(layers.Dropout(0.1))
-modelo.add(Dense(4))
+#modelo.add(Dense(6, activation=layers.LeakyReLU(alpha=0.1)))
+#modelo.add(layers.Dropout(0.1))
+modelo.add(Dense(3))
 
 
 
@@ -34,12 +34,12 @@ callback = tf.keras.callbacks.EarlyStopping(
     monitor='loss', patience=10, mode='auto')
 opt = tf.keras.optimizers.RMSprop(learning_rate=0.00001)
 
-modelo.compile(loss='MAE', optimizer="Nadam", metrics=['mae'])
+modelo.compile(loss='MSE', optimizer="Nadam", metrics=['accuracy'])
 
-modelo.fit(dados[0], dados[2], batch_size=64, epochs=100,
+modelo.fit(dados[0], dados[2], batch_size=64, epochs=1500,
            verbose=2, validation_data=(dados[1], dados[3]))
 
-results = modelo.evaluate(dados[1][:-200], dados[3][:-200], batch_size=128)
+#results = modelo.evaluate(dados[1][:-200], dados[3][:-200], batch_size=128)
 
 modelo.save('Tabelas')
 

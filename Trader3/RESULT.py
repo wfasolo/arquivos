@@ -33,7 +33,7 @@ def prever(ultimo, modelo, bloco, IA):
 
         for i in range(0, (len(resultado.T)-3), 4):
             tt2 = pd.DataFrame([resultado[i].values, resultado[i+1].values,
-                                resultado[i+2].values, resultado[i+3].values, resultado[i+4].values]).T
+                                resultado[i+2].values, resultado[i+3].values]).T
 
             tt = pd.concat([tt, tt2], ignore_index=True)
 

@@ -66,9 +66,9 @@ def tab_treino(dadost, tabelax, tabelay):
         dadost['volume']=dadost['volume']/dadost['volume'].max()"""
 
         dados_limpo = pd.DataFrame(
-            [dadost['open'], dadost['high'], dadost['low'], dadost['close'], dadost['volume']/1e7]).T
+            [dadost['cor'], dadost['corpo'],dadost['dist']]).T
 
-        dadost.index = pd.to_datetime(dadost['date'])
+        #dadost.index = pd.to_datetime(dadost['date'])
 
         tabela = dados_limpo.values
 
@@ -99,7 +99,8 @@ def tab_treino(dadost, tabelax, tabelay):
 
 
 def salvar_tab(tabelax, tabelay):
-    print(len(tabelax))
-    tabelay = tabelay.drop([4], axis=1)
+    print((tabelax))
+    print((tabelay))
+    #tabelay = tabelay.drop([4], axis=1)
     tabelax.to_pickle('Tabelas/tabelax')
     tabelay.to_pickle('Tabelas/tabelay')
