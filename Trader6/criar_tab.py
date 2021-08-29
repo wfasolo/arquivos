@@ -5,7 +5,7 @@ from datetime import date, timedelta, datetime
 import time
 
 
-data_atual = date.today() - timedelta(days=1)
+data_atual = date.today() - timedelta(days=2)
 
 
 def tab(dados):
@@ -19,15 +19,18 @@ def tab(dados):
         atual_o = dados_atual['open'][:1]
         anterior_o=dados_ant['open'][-1:]
         cor = atual_c.values/atual_o.values
-        movel20 = dados['open'].rolling(21).mean()
+        movel20 = dados['low'].rolling(20).mean()
+        movel1= dados['high'].rolling(1).mean()
 
         tabela = pd.concat(
             [dados_ant[-10:], dados_atual[:50]], ignore_index=True)
         tabela.index = pd.to_datetime(tabela['date'], unit='s')
         movel20 = movel20[-len(tabela):]
+        movel1 = movel1[-len(tabela):]
         mavdf = pd.DataFrame(
             dict(fec=anterior_o.values,aber=atual_o.values), index=tabela.index)
         mavdf['movel'] = movel20.values
+        mavdf['movel1'] = movel1.values
 
     if atual_o.empty == False and cor[0] >= [1.00]  and atual_o.values>anterior_o.values and atual_o.values > movel20[10:11].values:
         return tabela, mavdf, data_atual
