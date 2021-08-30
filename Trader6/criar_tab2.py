@@ -5,7 +5,7 @@ from datetime import date, timedelta, datetime
 import time
 
 a = 0
-
+data_atual = date.today()
 
 def tab(dados):
 
@@ -30,6 +30,5 @@ def tab(dados):
         mavdf = pd.DataFrame(dados['movel20'], index=dados['date'])
         mavdf['move200'] = dados['movel200']
 
-    if dados['media'][a] > 0:
-        
-        return dados, mavdf, dados['date'][a]
+    if dados['media'][a] > 0:        
+        return dados, mavdf, data_atual
