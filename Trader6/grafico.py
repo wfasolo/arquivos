@@ -2,7 +2,7 @@
 import mplfinance as fplt
 
 
-def graf(ticker, dados):
+def graf(ticker,empresa, dados):
     tabel = dados[0]
     mavdf = dados[1]
     data_atual = dados[2]
@@ -14,9 +14,10 @@ def graf(ticker, dados):
         type='candle',
         style='charles',
         block=True,
-        title='Empresa: '+ticker,
+        title=empresa+' : '+ticker,
         ylabel='Price ($)',
         addplot=ap,
         # mav=(11),
-        vlines=data_atual
+        vlines=data_atual,
+        volume=True
     )
