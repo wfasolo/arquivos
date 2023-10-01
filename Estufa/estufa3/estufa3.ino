@@ -18,15 +18,13 @@ DallasTemperature sensors(&ourWire); //PASSA A TEMPERATURA PARA O DallasTemperat
 #define DEVICE_ID "Estufa"
 #define DEVICE_CREDENTIAL "@#lucas"
 
-float kp = 20, ki = 50, kd = 70,
+float kp = 10, ki = 5, kd = 5,
       p = 0, i = 0, d = 0,
-      integral = 0, derivada = 0,
+      sum_erro = 0,
       pwm = 1020,  erro = 0, pid = 0,
       tempo = 0, tempo1 = 0, tempo2 = 0,
       temp = 27, temp_ant = 27,
-      setpoint = 27, sp_a = setpoint;
-
-
+      setpoint = 35, sp_a = setpoint;
 
 ThingerESP8266 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
 
@@ -103,14 +101,13 @@ void checar()
   }
 
 
-  if (temp <= (setpoint - 5))
+  if (temp <= (setpoint * 0.9))
   {
     pwm = pwm / 2;
   }
-  if (temp >= (setpoint + 5))
+  if (temp >= (setpoint * 1.1))
   {
     pwm = pwm * 2;
-
   }
 
   //
@@ -140,8 +137,7 @@ void medir()
       cm++;
     }
     delay(5);
-
-  }
+ }
   yield();
   temp = temp / cm;
 }
@@ -155,12 +151,11 @@ void calcular()
   float dt = (millis() - tempo) / 1000;
   tempo = millis();
 
-  integral = integral + erro * dt;
-  derivada = (erro - prev_erro) / dt;
-
-  p = setpoint * kp * erro * 0.1;
-  i = ki * integral * 0.001;
-  d = setpoint * kd *  derivada ;
+  sum_erro = (erro - prev_erro);
+ 
+  p = kp * erro;
+  i = ki * sum_erro * dt;
+  d = kd * sum_erro * dt;
   pid = p + i + d;
 
   pwm = pwm - pid, 0;
