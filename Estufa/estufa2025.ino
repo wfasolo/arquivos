@@ -18,9 +18,8 @@ const int ADC_RESOLUTION = 4095;   // Resolução do ADC, 12-bit = 4095
 
 // Variáveis de controle, agora não são mais constantes
 float SETPOINT = 50.0;
-float KP = 10.0;
-float KI = 0.5;
-float KD = 5.0;
+float Kc = 10.0;
+float Pc = 0.5;
 
 // Variáveis de estado do sistema
 float currentTemp = 0.0;
@@ -63,17 +62,15 @@ void setup() {
     {
       // Envia os valores atuais para a plataforma na inicialização
       in["Setpoint"] = SETPOINT;
-      in["KP"] = KP;
-      in["KI"] = KI;
-      in["KD"] = KD;
-    }
+      in["Kc"] = Kc;
+      in["Pc"] = Pc;
+      }
     else
     {
       // Atualiza as variáveis com os novos valores da plataforma
       SETPOINT = in["Setpoint"];
-      KP = in["KP"];
-      KI = in["KI"];
-      KD = in["KD"];
+      Kc = in["Kc"];
+      Pc = in["Pc"];
     }
   };
 }
