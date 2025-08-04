@@ -74,9 +74,6 @@ void setup() {
       SETPOINT = in["Setpoint"];
       Kc = in["Kc"];
       Pc = in["Pc"];
-      KP = 0.6 * Kc;
-      KI = 1.2 * Kc / Pc;
-      KD = 0.075 * Kc * Pc;
     }
   };
 }
@@ -117,6 +114,10 @@ void calculatePID() {
   float error = SETPOINT - currentTemp;
 
   if (abs(error) <= 0.1) return;
+
+  KP = 0.6 * Kc;
+  KI = 1.2 * Kc / Pc;
+  KD = 0.075 * Kc * Pc;
 
   // Termo Proporcional
   proportionalTerm = KP * error;
